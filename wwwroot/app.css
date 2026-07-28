@@ -12,6 +12,7 @@
 @import url("css/components/button.css");
 @import url("css/components/card.css");
 @import url("css/components/textbox.css");
+@import url("css/components/navigation.css");
 
 /* ===========================
    Layout
@@ -24,6 +25,7 @@
 Pages
 ===============*/
 @import url("css/pages/login.css");
+@import url("css/pages/profile.css");
 
 /* ===========================
    Global

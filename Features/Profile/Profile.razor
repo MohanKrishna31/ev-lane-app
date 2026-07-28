@@ -1,0 +1,72 @@
+﻿@page "/profile"
+@layout MainLayout
+
+@inject ProfileViewModel ViewModel
+@inject NavigationManager Navigation
+
+
+<PageContainer>
+
+
+    <AppHeader Title="Profile"
+               Subtitle="Manage your account" />
+
+
+    <AppCard>
+
+
+        <h3>
+            @ViewModel.UserName
+        </h3>
+
+
+        <p>
+            Mobile User
+        </p>
+
+
+    </AppCard>
+
+
+
+    <AppCard>
+
+
+        <h4>
+            Account
+        </h4>
+
+
+        <AppButton Text="Logout"
+                   CssClass="logout-button"
+                   OnClick="LogoutAsync" />
+
+
+    </AppCard>
+
+
+
+</PageContainer>
+
+
+
+@code {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadAsync();
+    }
+
+
+
+    private async Task LogoutAsync()
+    {
+        await ViewModel.LogoutAsync();
+
+
+        Navigation.NavigateTo("/login", true);
+    }
+
+
+}

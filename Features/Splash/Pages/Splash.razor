@@ -1,4 +1,5 @@
 ﻿@page "/"
+@layout AuthLayout
 
 @using nApps.Futs.Mobile.Features.Splash.ViewModels
 @using nApps.Futs.Mobile.Shared.Navigation
@@ -21,8 +22,7 @@
             return;
 
         var authenticated = await ViewModel.IsAuthenticatedAsync();
-        Navigation.NavigateTo(AppRoutes.Login, true);
-        //Navigation.NavigateTo(authenticated? AppRoutes.Dashboard: AppRoutes.Login,true);
+        Navigation.NavigateTo(authenticated? AppRoutes.Dashboard: AppRoutes.Login,true);
     }
 
 }

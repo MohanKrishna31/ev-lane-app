@@ -82,7 +82,6 @@
     <ItemGroup>
       <Folder Include="Features\Charging\" />
       <Folder Include="Features\Notifications\" />
-      <Folder Include="Features\Profile\" />
       <Folder Include="Features\Sessions\" />
       <Folder Include="Features\Settings\" />
       <Folder Include="Features\Stations\" />

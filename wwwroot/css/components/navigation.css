@@ -1,0 +1,18 @@
+﻿.bottom-navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+    .bottom-navigation button {
+        border: none;
+        background: none;
+        display: flex;
+        flex-direction: column;
+    }

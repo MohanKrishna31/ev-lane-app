@@ -1,20 +1,47 @@
 ﻿@page "/dashboard"
+@layout MainLayout
+
 
 <PageContainer>
 
-    <AppHeader
-        Title="Component Test"
-        Subtitle="Testing reusable controls" />
+
+    <AppHeader Title="Welcome"
+               Subtitle="Find your nearest charging station" />
+
+
 
     <AppCard>
 
-        <AppTextBox
-            Label="Mobile Number"
-            Placeholder="+91 9876543210" />
 
-        <AppButton
-            Text="Continue" />
+        <h3>
+            Active Charging
+        </h3>
+
+
+        <p>
+            No active charging session
+        </p>
+
 
     </AppCard>
+
+
+
+    <AppCard>
+
+
+        <h3>
+            Nearby Stations
+        </h3>
+
+
+        <p>
+            Search nearby EV chargers
+        </p>
+
+
+    </AppCard>
+
+
 
 </PageContainer>
