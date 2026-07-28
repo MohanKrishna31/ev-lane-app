@@ -70,11 +70,41 @@
         <PackageReference Include="CommunityToolkit.Maui" Version="15.0.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.10" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.10" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.10" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Charging\" />
+      <Folder Include="Features\Notifications\" />
+      <Folder Include="Features\Profile\" />
+      <Folder Include="Features\Sessions\" />
+      <Folder Include="Features\Settings\" />
+      <Folder Include="Features\Stations\" />
+      <Folder Include="Features\Vehicles\" />
+      <Folder Include="Features\Wallet\" />
+      <Folder Include="Components\Shared\Indicators\" />
+      <Folder Include="Shared\DTOs\" />
+      <Folder Include="Shared\Exceptions\" />
+      <Folder Include="Shared\Extensions\" />
+      <Folder Include="Shared\Layout\" />
+      <Folder Include="Shared\Models\" />
+      <Folder Include="Shared\Services\Authentication\" />
+      <Folder Include="Shared\Services\SignalR\" />
+      <Folder Include="Shared\Utilities\" />
+      <Folder Include="wwwroot\Images\" />
+    </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="appsettings.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="nApps.Futs.Application.Contracts">
+	    <HintPath>..\CMS\src\nApps.Futs.Application.Contracts\bin\Debug\net10.0\nApps.Futs.Application.Contracts.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 </Project>

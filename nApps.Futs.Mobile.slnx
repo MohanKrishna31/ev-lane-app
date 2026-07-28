@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="nApps.Futs.Mobile.csproj" />
+  <Project Path="nApps.Futs.Mobile.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>

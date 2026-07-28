@@ -1,0 +1,28 @@
+﻿.app-input-container {
+    margin-bottom: 20px;
+}
+
+.app-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.app-input {
+    width: 100%;
+    height: 52px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 16px;
+    background: white;
+    font-size: 16px;
+    outline: none;
+    transition: .2s;
+}
+
+    .app-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+    }

@@ -1,0 +1,19 @@
+﻿.login-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    padding: 24px;
+}
+
+.login-card {
+    margin-top: 30px;
+}
+
+.primary-button {
+    margin-top: 20px;
+}
+
+.error-message {
+    margin-top: 15px;
+}

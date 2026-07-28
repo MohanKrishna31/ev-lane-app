@@ -1,0 +1,11 @@
+﻿.app-header {
+    margin-bottom: 24px;
+}
+
+    .app-header h2 {
+        margin: 0;
+    }
+
+    .app-header p {
+        margin-top: 6px;
+    }

@@ -1,0 +1,28 @@
+﻿@page "/"
+
+@using nApps.Futs.Mobile.Features.Splash.ViewModels
+@using nApps.Futs.Mobile.Shared.Navigation
+
+@inject SplashViewModel ViewModel
+@inject NavigationManager Navigation
+
+<h3>Loading...</h3>
+
+<div class="text-center mt-5">
+    <h4>EV Lane</h4>
+    <p>Please wait...</p>
+</div>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var authenticated = await ViewModel.IsAuthenticatedAsync();
+        Navigation.NavigateTo(AppRoutes.Login, true);
+        //Navigation.NavigateTo(authenticated? AppRoutes.Dashboard: AppRoutes.Login,true);
+    }
+
+}

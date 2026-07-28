@@ -1,0 +1,94 @@
+﻿@page "/login"
+@using nApps.Futs.Mobile.Features.Authentication.ViewModels
+
+@inject LoginViewModel ViewModel
+@inject NavigationManager Navigation
+
+
+<PageContainer>
+
+    <div class="login-page">
+
+
+        <AppHeader Title="EV Lane"
+                   Subtitle="Charge smarter. Drive further." />
+
+
+        <AppCard CssClass="login-card">
+
+
+            <AppTextBox Label="Mobile Number"
+                        Placeholder="Enter mobile number"
+                        Type="tel"
+                        Disabled="@ViewModel.IsBusy"
+                        @bind-Value="ViewModel.MobileNumber" />
+
+
+            @if (!ViewModel.OtpSent)
+            {
+                <AppButton Text="Send OTP"
+                           CssClass="primary-button"
+                           Disabled="@ViewModel.IsBusy"
+                           OnClick="SendOtpAsync" />
+            }
+
+
+            @if (ViewModel.OtpSent)
+            {
+
+                <AppTextBox Label="OTP"
+                            Placeholder="Enter OTP"
+                            Type="number"
+                            Disabled="@ViewModel.IsBusy"
+                            @bind-Value="ViewModel.Otp" />
+
+
+                <AppButton Text="Verify OTP"
+                           CssClass="primary-button"
+                           Disabled="@ViewModel.IsBusy"
+                           OnClick="VerifyOtpAsync" />
+
+            }
+
+
+            @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+            {
+                <div class="error-message">
+
+                    @ViewModel.ErrorMessage
+
+                </div>
+            }
+
+
+        </AppCard>
+
+
+    </div>
+
+
+</PageContainer>
+
+
+@code {
+
+
+    private async Task SendOtpAsync()
+    {
+        await ViewModel.SendOtpAsync();
+    }
+
+
+
+    private async Task VerifyOtpAsync()
+    {
+        var success = await ViewModel.VerifyOtpAsync();
+
+
+        if (success)
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
+
+}

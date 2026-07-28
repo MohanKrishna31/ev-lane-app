@@ -1,0 +1,44 @@
+﻿<div class="app-input-container">
+
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="app-label">@Label</label>
+    }
+
+    <input class="app-input @CssClass"
+           type="@Type"
+           value="@Value"
+           @oninput="OnInput"
+           placeholder="@Placeholder"
+           disabled="@Disabled" />
+</div>
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Type { get; set; } = "text";
+
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private async Task OnInput(ChangeEventArgs e)
+    {
+        await ValueChanged.InvokeAsync(e.Value?.ToString() ?? "");
+    }
+
+}
