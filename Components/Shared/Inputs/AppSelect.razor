@@ -1,0 +1,64 @@
+﻿@using System.ComponentModel
+
+@typeparam TValue
+
+<div class="app-input">
+
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="app-input-label">
+            @Label
+        </label>
+    }
+
+    <select class="app-input-control"
+            value="@SelectedValue"
+            @onchange="OnChanged"
+            disabled="@Disabled">
+
+        @foreach (var option in Items)
+        {
+            <option value="@option.Value">
+                @option.Text
+            </option>
+        }
+
+    </select>
+
+</div>
+
+@code
+{
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    [Parameter]
+    public IEnumerable<SelectOption<TValue>> Items { get; set; }
+        = Enumerable.Empty<SelectOption<TValue>>();
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    private string? SelectedValue => Value?.ToString();
+
+    private async Task OnChanged(ChangeEventArgs args)
+    {
+        if (args.Value is null)
+            return;
+
+        var converter = TypeDescriptor.GetConverter(typeof(TValue));
+
+        if (converter != null && converter.IsValid(args.Value))
+        {
+            var value = (TValue?)converter.ConvertFrom(args.Value);
+
+            await ValueChanged.InvokeAsync(value);
+        }
+    }
+}

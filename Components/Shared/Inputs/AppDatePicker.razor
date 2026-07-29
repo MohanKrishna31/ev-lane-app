@@ -1,0 +1,47 @@
+﻿<div class="app-input">
+
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="app-input-label">
+            @Label
+        </label>
+    }
+
+    <input class="app-input-control"
+           type="date"
+           value="@DateValue"
+           @onchange="OnValueChanged"
+           disabled="@Disabled" />
+
+</div>
+@code
+{
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public DateTime? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime?> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    private string DateValue =>
+        Value?.ToString("yyyy-MM-dd") ?? string.Empty;
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var date))
+        {
+            Value = date;
+        }
+        else
+        {
+            Value = null;
+        }
+
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

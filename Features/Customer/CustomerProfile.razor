@@ -1,5 +1,6 @@
 ﻿@page "/customer/profile"
 
+
 @inject CustomerViewModel ViewModel
 @inject NavigationManager Navigation
 
@@ -26,40 +27,44 @@
     else
     {
         <AppCard>
+            <ProfileAvatar
+    ImageUrl="@ViewModel.Customer?.ProfilePhoto"
+    ShowEditButton="true"
+    OnChangePhoto="ChangePhoto" />
 
             <div class="profile-item">
                 <label>Full Name</label>
-                <div>@ViewModel.Customer.FullName</div>
+                <div>@ViewModel.Customer!.FullName</div>
             </div>
 
             <div class="profile-item">
                 <label>Mobile</label>
-                <div>@ViewModel.Customer.MobileNumber</div>
+                <div>@ViewModel.Customer!.MobileNumber</div>
             </div>
 
             <div class="profile-item">
                 <label>Email</label>
-                <div>@ViewModel.Customer.Email</div>
+                <div>@ViewModel.Customer!.Email</div>
             </div>
 
             <div class="profile-item">
                 <label>Wallet Balance</label>
-                <div>₹ @ViewModel.Customer.WalletBalance</div>
+                <div>₹ @ViewModel.Customer!.WalletBalance</div>
             </div>
 
             <div class="profile-item">
                 <label>Preferred Language</label>
-                <div>@ViewModel.Customer.PreferredLanguage</div>
+                <div>@ViewModel.Customer!.PreferredLanguage</div>
             </div>
 
             <div class="profile-item">
                 <label>Date of Birth</label>
-                <div>@ViewModel.Customer.DateOfBirth?.ToString("dd MMM yyyy")</div>
+                <div>@ViewModel.Customer!.DateOfBirth?.ToString("dd MMM yyyy")</div>
             </div>
 
             <div class="profile-item">
                 <label>Gender</label>
-                <div>@ViewModel.Customer.Gender</div>
+                <div>@ViewModel.Customer!.Gender</div>
             </div>
 
             <div class="profile-item">
@@ -95,6 +100,11 @@
     private async Task LoadProfile()
     {
         await ViewModel.LoadAsync();
+    }
+
+    private void ChangePhoto()
+    {
+        Navigation.NavigateTo("/customer/profile/photo");
     }
 
     private async void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

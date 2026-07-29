@@ -1,0 +1,63 @@
+﻿<div class="app-switch">
+
+    <div class="app-switch-header">
+
+        <div class="app-switch-content">
+
+            @if (!string.IsNullOrWhiteSpace(Label))
+            {
+                <div class="app-switch-label">
+                    @Label
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Description))
+            {
+                <div class="app-switch-description">
+                    @Description
+                </div>
+            }
+
+        </div>
+
+        <label class="switch">
+
+            <input type="checkbox"
+                   checked="@Value"
+                   @onchange="OnChanged"
+                   disabled="@Disabled" />
+
+            <span class="slider round"></span>
+
+        </label>
+
+    </div>
+
+</div>
+
+@code
+{
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Value { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    private async Task OnChanged(ChangeEventArgs e)
+    {
+        if (bool.TryParse(e.Value?.ToString(), out var value))
+        {
+            Value = value;
+            await ValueChanged.InvokeAsync(value);
+        }
+    }
+}

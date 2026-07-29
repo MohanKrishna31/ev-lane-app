@@ -13,13 +13,29 @@
     }
     else
     {
+        <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhoto"
+                       ShowEditButton="true"
+                       OnChangePhoto="ChangePhoto" />
         <div class="form-container">
+            <AppTextBox Label="Mobile Number"
+                        Value="@ViewModel.Customer?.MobileNumber"
+                        Disabled="true" />
 
             <AppTextBox Label="Full Name"
                         @bind-Value="ViewModel.Model.FullName" />
 
             <AppTextBox Label="Email"
                         @bind-Value="ViewModel.Model.Email" />
+
+            <AppDatePicker Label="Date of Birth"
+                           Value="ViewModel.Model.DateOfBirth"
+                           ValueChanged="@(value => ViewModel.Model.DateOfBirth = value)" />
+
+            <AppSelect TValue="Gender"
+                       Label="Gender"
+                       Value="ViewModel.Model.Gender"
+                       ValueChanged="@(value => ViewModel.Model.Gender = value)"
+                       Items="ViewModel.GenderOptions" />
 
             <AppTextBox Label="Preferred Language"
                         @bind-Value="ViewModel.Model.PreferredLanguage" />
@@ -47,7 +63,10 @@
 
         await ViewModel.LoadAsync();
     }
-
+    private void ChangePhoto()
+    {
+        Navigation.NavigateTo("/customer/profile/photo");
+    }
     private async Task SaveAsync()
     {
         await ViewModel.SaveAsync();

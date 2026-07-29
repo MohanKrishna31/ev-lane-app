@@ -92,7 +92,6 @@
       <Folder Include="Shared\Exceptions\" />
       <Folder Include="Shared\Extensions\" />
       <Folder Include="Shared\Layout\" />
-      <Folder Include="Shared\Models\" />
       <Folder Include="Shared\Services\Authentication\" />
       <Folder Include="Shared\Services\SignalR\" />
       <Folder Include="Shared\Utilities\" />
