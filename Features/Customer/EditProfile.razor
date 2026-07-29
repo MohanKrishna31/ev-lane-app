@@ -1,0 +1,69 @@
+﻿@page "/customer/edit"
+
+@inject EditProfileViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageContainer>
+
+    <AppHeader Title="Edit Profile" />
+
+    @if (ViewModel.IsBusy)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="form-container">
+
+            <AppTextBox Label="Full Name"
+                        @bind-Value="ViewModel.Model.FullName" />
+
+            <AppTextBox Label="Email"
+                        @bind-Value="ViewModel.Model.Email" />
+
+            <AppTextBox Label="Preferred Language"
+                        @bind-Value="ViewModel.Model.PreferredLanguage" />
+
+            <!-- DateOfBirth -->
+            <!-- Gender -->
+
+            <div class="mt-4">
+
+                <AppButton Text="Save"
+                           OnClick="SaveAsync" />
+
+            </div>
+
+        </div>
+    }
+
+</PageContainer>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        ViewModel.PropertyChanged += ViewModelChanged;
+
+        await ViewModel.LoadAsync();
+    }
+
+    private async Task SaveAsync()
+    {
+        await ViewModel.SaveAsync();
+
+        Navigation.NavigateTo("/customer/profile");
+    }
+
+    private async void ViewModelChanged(
+        object? sender,
+        System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ViewModel.PropertyChanged -= ViewModelChanged;
+    }
+}

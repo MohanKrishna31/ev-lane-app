@@ -101,9 +101,4 @@
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Reference Include="nApps.Futs.Application.Contracts">
-	    <HintPath>..\CMS\src\nApps.Futs.Application.Contracts\bin\Debug\net10.0\nApps.Futs.Application.Contracts.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
 </Project>

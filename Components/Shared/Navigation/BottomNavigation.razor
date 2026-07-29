@@ -1,0 +1,46 @@
+﻿<div class="bottom-navigation">
+
+    <button @onclick='() => NavigateTo("/")'>
+        <span class="nav-icon">⌂</span>
+        <span class="nav-text">Home</span>
+    </button>
+
+
+    <button @onclick='() => NavigateTo("/stations")'>
+        <span class="nav-icon">⚡</span>
+        <span class="nav-text">Stations</span>
+    </button>
+
+
+    <button @onclick='() => NavigateTo("/sessions")'>
+        <span class="nav-icon">🔋</span>
+        <span class="nav-text">Sessions</span>
+    </button>
+
+
+    <button @onclick='() => NavigateTo("/wallet")'>
+        <span class="nav-icon">₹</span>
+        <span class="nav-text">Wallet</span>
+    </button>
+
+
+    <button @onclick='() => NavigateTo("/customer/profile")'>
+        <span class="nav-icon">👤</span>
+        <span class="nav-text">Profile</span>
+    </button>
+
+</div>
+
+
+@code {
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+
+    private void NavigateTo(string url)
+    {
+        Navigation.NavigateTo(url);
+    }
+
+}
