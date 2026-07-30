@@ -8,4 +8,7 @@ public interface ICustomerService
 {
     Task<CustomerDto?> GetProfileAsync();
     Task<CustomerDto?> UpdateProfileAsync(UpdateCustomerProfileRequest request);
+    Task<ProfilePhotoDto?> UploadProfilePhotoAsync(Stream stream,string fileName,string contentType);
+
+    Task DeleteProfilePhotoAsync();
 }

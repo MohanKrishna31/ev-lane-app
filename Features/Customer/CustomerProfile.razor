@@ -27,9 +27,8 @@
     else
     {
         <AppCard>
-            <ProfileAvatar
-    ImageUrl="@ViewModel.Customer?.ProfilePhoto"
-    ShowEditButton="true"
+            <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhotoUrl"
+    ShowEditButton="false"
     OnChangePhoto="ChangePhoto" />
 
             <div class="profile-item">
@@ -104,7 +103,7 @@
 
     private void ChangePhoto()
     {
-        Navigation.NavigateTo("/customer/profile/photo");
+        Navigation.NavigateTo("/customer/edit");
     }
 
     private async void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

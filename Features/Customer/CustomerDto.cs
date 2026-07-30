@@ -12,6 +12,7 @@ public class CustomerDto
     public string? FullName { get; set; }
     public string? Email { get; set; }
     public string? ProfilePhoto { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
     public decimal WalletBalance { get; set; }
     public string PreferredLanguage { get; set; } = "";
     public DateTime? DateOfBirth { get; set; }

@@ -13,9 +13,12 @@
     }
     else
     {
-        <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhoto"
+        <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhotoUrl"
                        ShowEditButton="true"
-                       OnChangePhoto="ChangePhoto" />
+                       CanDelete="@(!string.IsNullOrWhiteSpace(ViewModel.Customer?.ProfilePhotoUrl))"
+                       OnChangePhoto="UploadPhoto"
+                       OnDeletePhoto="DeletePhoto" />
+
         <div class="form-container">
             <AppTextBox Label="Mobile Number"
                         Value="@ViewModel.Customer?.MobileNumber"
@@ -63,10 +66,12 @@
 
         await ViewModel.LoadAsync();
     }
-    private void ChangePhoto()
+
+    private async Task ChangePhoto()
     {
-        Navigation.NavigateTo("/customer/profile/photo");
+        await ViewModel.UploadPhotoAsync();
     }
+
     private async Task SaveAsync()
     {
         await ViewModel.SaveAsync();
@@ -79,6 +84,16 @@
         System.ComponentModel.PropertyChangedEventArgs e)
     {
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task UploadPhoto()
+    {
+        await ViewModel.UploadPhotoAsync();
+    }
+
+    private async Task DeletePhoto()
+    {
+        await ViewModel.DeletePhotoAsync();
     }
 
     public void Dispose()

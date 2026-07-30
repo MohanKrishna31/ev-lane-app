@@ -1,4 +1,5 @@
 ﻿using nApps.Futs.Mobile.Shared.Constants;
+using nApps.Futs.Mobile.Shared.Media;
 using nApps.Futs.Mobile.Shared.Models;
 using nApps.Futs.Mobile.Shared.ViewModels;
 using System;
@@ -13,9 +14,12 @@ public class EditProfileViewModel : BaseViewModel
     public CustomerDto? Customer { get; private set; }
     public UpdateCustomerProfileRequest Model { get; } = new();
 
-    public EditProfileViewModel(ICustomerService customerService)
+    private readonly IMediaPickerService _mediaPickerService;
+
+    public EditProfileViewModel(ICustomerService customerService, IMediaPickerService mediaPickerService)
     {
         _customerService = customerService;
+        _mediaPickerService = mediaPickerService;
     }
 
     public async Task LoadAsync()
@@ -52,4 +56,33 @@ public class EditProfileViewModel : BaseViewModel
         new() { Value = Gender.Unknown, Text = "Unknown" },
         new() { Value = Gender.Other, Text = "Other" }
     ];
+    public async Task UploadPhotoAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var file = await _mediaPickerService.PickPhotoAsync();
+
+            if (file == null)
+                return;
+
+            await using (file.Stream)
+            {
+                await _customerService.UploadProfilePhotoAsync(
+                    file.Stream,
+                    file.FileName,
+                    file.ContentType);
+            }
+
+            await LoadAsync();
+        });
+    }
+    public async Task DeletePhotoAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            await _customerService.DeleteProfilePhotoAsync();
+
+            await LoadAsync();
+        });
+    }
 }

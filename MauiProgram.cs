@@ -9,6 +9,7 @@ using nApps.Futs.Mobile.Features.Splash.ViewModels;
 using nApps.Futs.Mobile.Shared.Configuration;
 using nApps.Futs.Mobile.Shared.Helpers;
 using nApps.Futs.Mobile.Shared.Http;
+using nApps.Futs.Mobile.Shared.Media;
 using nApps.Futs.Mobile.Shared.Navigation;
 using nApps.Futs.Mobile.Shared.Services.Api;
 using nApps.Futs.Mobile.Shared.Services.Storage;
@@ -45,7 +46,19 @@ public static class MauiProgram
             client.BaseAddress = new Uri(apiSettings.BaseUrl);
             client.Timeout = TimeSpan.FromSeconds(60);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }).AddHttpMessageHandler<AuthorizationHandler>(); 
+        }).AddHttpMessageHandler<AuthorizationHandler>();
+
+        builder.Services.AddHttpClient<IFileUploadService, FileUploadService>((serviceProvider, client) =>
+        {
+            var apiSettings = serviceProvider
+                .GetRequiredService<IOptions<ApiSettings>>()
+                .Value;
+
+            client.BaseAddress = new Uri(apiSettings.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(60);
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+        }).AddHttpMessageHandler<AuthorizationHandler>();
 
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
@@ -60,6 +73,8 @@ public static class MauiProgram
         builder.Services.AddScoped<EditProfileViewModel>();
 
         builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+        builder.Services.AddSingleton<IMediaPickerService, MediaPickerService>();
 
         builder
             .UseMauiApp<App>()

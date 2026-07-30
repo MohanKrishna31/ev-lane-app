@@ -21,6 +21,12 @@
                    OnClick="OnChangePhoto" />
     }
 
+    @if (CanDelete)
+    {
+        <AppButton Text="Remove Photo"
+                   OnClick="OnDeletePhoto" />
+    }
+
 </div>
 
 @code {
@@ -33,5 +39,10 @@
 
     [Parameter]
     public EventCallback OnChangePhoto { get; set; }
+    [Parameter]
+    public bool CanDelete { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeletePhoto { get; set; }
 
 }
