@@ -1,10 +1,22 @@
 ﻿<div class="app-card @CssClass">
 
-    @ChildContent
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <div class="app-card-header">
+            @Title
+        </div>
+    }
+
+    <div class="app-card-body">
+        @ChildContent
+    </div>
 
 </div>
 
 @code {
+
+    [Parameter]
+    public string? Title { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

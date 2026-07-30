@@ -81,6 +81,8 @@
                    OnClick="EditProfile" />
         <AppButton Text="Refresh"
                    OnClick="LoadProfile" />
+        <AppButton Text="Settings"
+                   OnClick="Settings" />
         <AppButton Text="Logout"
                    OnClick="Logout" />
     }
@@ -105,7 +107,10 @@
     {
         Navigation.NavigateTo("/customer/edit");
     }
-
+    private void Settings()
+    {
+        Navigation.NavigateTo("/settings");
+    }
     private async void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         await InvokeAsync(StateHasChanged);

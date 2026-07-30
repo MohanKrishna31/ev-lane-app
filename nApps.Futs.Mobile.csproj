@@ -83,7 +83,6 @@
       <Folder Include="Features\Charging\" />
       <Folder Include="Features\Notifications\" />
       <Folder Include="Features\Sessions\" />
-      <Folder Include="Features\Settings\" />
       <Folder Include="Features\Stations\" />
       <Folder Include="Features\Vehicles\" />
       <Folder Include="Features\Wallet\" />

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using nApps.Futs.Mobile.Features.Authentication;
 using nApps.Futs.Mobile.Features.Authentication.ViewModels;
 using nApps.Futs.Mobile.Features.Customer;
+using nApps.Futs.Mobile.Features.Settings;
 using nApps.Futs.Mobile.Features.Splash.ViewModels;
 using nApps.Futs.Mobile.Shared.Configuration;
 using nApps.Futs.Mobile.Shared.Helpers;
@@ -71,6 +72,8 @@ public static class MauiProgram
         builder.Services.AddScoped<CustomerViewModel>();
 
         builder.Services.AddScoped<EditProfileViewModel>();
+
+        builder.Services.AddScoped<SettingsViewModel>();
 
         builder.Services.AddScoped<ICustomerService, CustomerService>();
 
