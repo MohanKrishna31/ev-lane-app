@@ -40,17 +40,12 @@
                        ValueChanged="@(value => ViewModel.Model.Gender = value)"
                        Items="ViewModel.GenderOptions" />
 
-            <AppTextBox Label="Preferred Language"
-                        @bind-Value="ViewModel.Model.PreferredLanguage" />
-
-            <!-- DateOfBirth -->
-            <!-- Gender -->
+            @* <AppTextBox Label="Preferred Language"
+                        @bind-Value="ViewModel.Model.PreferredLanguage" /> *@
 
             <div class="mt-4">
-
                 <AppButton Text="Save"
                            OnClick="SaveAsync" />
-
             </div>
 
         </div>

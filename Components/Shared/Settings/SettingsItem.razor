@@ -1,0 +1,122 @@
+﻿<div class="settings-item @CssClass"
+     @onclick="HandleClick">
+
+    <div class="settings-item-content">
+
+        @if (!string.IsNullOrWhiteSpace(Icon))
+        {
+            <span class="@Icon settings-item-icon"></span>
+        }
+
+        <div class="settings-item-text">
+
+            <div class="settings-item-title">
+                @Title
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <div class="settings-item-subtitle">
+                    @Subtitle
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    @if (ChildContent is not null)
+    {
+        <div class="settings-item-action">
+            @ChildContent
+        </div>
+    }
+    else if (ShowArrow)
+    {
+        <span class="fa fa-chevron-right settings-item-arrow"></span>
+    }
+
+</div>
+
+@code
+{
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Subtitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool ShowArrow { get; set; } = true;
+
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}
+<style>
+    .settings-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+        border-bottom: 1px solid #ececec;
+        cursor: pointer;
+    }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+    .settings-item-content {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .settings-item-icon {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .settings-item-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .settings-item-title {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .settings-item-subtitle {
+        margin-top: 3px;
+        font-size: 13px;
+        color: #777;
+    }
+
+    .settings-item-action {
+        display: flex;
+        align-items: center;
+    }
+
+    .settings-item-arrow {
+        color: #999;
+    }
+</style>

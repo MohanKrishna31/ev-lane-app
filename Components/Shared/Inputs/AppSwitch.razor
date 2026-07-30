@@ -20,9 +20,10 @@
 
         </div>
 
-        <label class="switch">
+        <label class="switch" for="@_id">
 
-            <input type="checkbox"
+            <input id="@_id"
+                   type="checkbox"
                    checked="@Value"
                    @onchange="OnChanged"
                    disabled="@Disabled" />
@@ -37,6 +38,8 @@
 
 @code
 {
+    private readonly string _id = $"switch_{Guid.NewGuid():N}";
+
     [Parameter]
     public string Label { get; set; } = string.Empty;
 
@@ -57,6 +60,7 @@
         if (bool.TryParse(e.Value?.ToString(), out var value))
         {
             Value = value;
+
             await ValueChanged.InvokeAsync(value);
         }
     }

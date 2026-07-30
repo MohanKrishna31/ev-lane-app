@@ -80,6 +80,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Components\Shared\Lists\" />
       <Folder Include="Features\Charging\" />
       <Folder Include="Features\Notifications\" />
       <Folder Include="Features\Sessions\" />

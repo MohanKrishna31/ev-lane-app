@@ -1,42 +1,114 @@
 ﻿@page "/settings"
 
+
 @inject SettingsViewModel ViewModel
+@inject NavigationManager Navigation
 
 <PageContainer>
 
     <AppCard Title="General">
 
-        <!-- Language -->
+    <SettingsItem
+        Icon="fa fa-language"
+        Title="Language"
+        Subtitle="@ViewModel.PreferredLanguage"
+        OnClick="OpenLanguage" />
 
-    </AppCard>
+</AppCard>
 
     <AppCard Title="Notifications">
 
-        <!-- Push -->
-        <!-- Charging -->
-        <!-- Wallet -->
-        <!-- Promotions -->
+        <AppSwitch Label="Push Notifications"
+                   Description="Receive important application notifications."
+                   @bind-Value="ViewModel.PushNotificationsEnabled" />
+
+        <AppSwitch Label="Charging Notifications"
+                   Description="Charging started, stopped and completed."
+                   @bind-Value="ViewModel.ChargingNotificationsEnabled" />
+
+        <AppSwitch Label="Wallet Notifications"
+                   Description="Wallet credits, debits and payment updates."
+                   @bind-Value="ViewModel.WalletNotificationsEnabled" />
+
+        <AppSwitch Label="Promotional Notifications"
+                   Description="Offers, campaigns and announcements."
+                   @bind-Value="ViewModel.PromotionalNotificationsEnabled" />
 
     </AppCard>
 
     <AppCard Title="Security">
 
-        <!-- Biometric -->
+        <AppSwitch Label="Biometric Login"
+                   Description="Use fingerprint or Face ID to login."
+                   @bind-Value="ViewModel.BiometricLoginEnabled" />
 
     </AppCard>
 
     <AppCard Title="Support">
 
-        <!-- Privacy -->
-        <!-- Terms -->
-        <!-- Contact -->
+        <SettingsItem Icon="fa fa-shield-alt"
+                      Title="Privacy Policy"
+                      OnClick="OpenPrivacy" />
+
+        <SettingsItem Icon="fa fa-file-contract"
+                      Title="Terms & Conditions"
+                      OnClick="OpenTerms" />
+
+        <SettingsItem Icon="fa fa-headset"
+                      Title="Contact Us"
+                      OnClick="OpenContact" />
+
+        <SettingsItem Icon="fa fa-circle-info"
+                      Title="About"
+                      OnClick="OpenAbout" />
 
     </AppCard>
+@*     <AppCard Title="Account">
 
-    <AppCard Title="Account">
+        <SettingsItem Icon="fa fa-trash"
+                      Title="Delete Account"
+                      Subtitle="Permanently delete your account"
+                      OnClick="DeleteAccount" />
 
-        <!-- Delete Account -->
-
-    </AppCard>
+    </AppCard> *@
+        <AppButton Text="Save Settings" OnClick="SaveSettings" />
 
 </PageContainer>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadAsync();
+    }
+
+    private async Task SaveSettings()
+    {
+        await ViewModel.SaveAsync();
+    }
+
+    private void OpenLanguage()
+    {
+
+    }
+
+    private void OpenPrivacy()
+    {
+
+    }
+
+    private void OpenTerms()
+    {
+
+    }
+
+    private void OpenContact()
+    {
+
+    }
+
+    private void OpenAbout()
+    {
+
+    }
+}

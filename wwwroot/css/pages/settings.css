@@ -1,0 +1,22 @@
+﻿.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #ececec;
+}
+
+    .settings-item:last-child {
+        border-bottom: none;
+    }
+
+.settings-title {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.settings-subtitle {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+}

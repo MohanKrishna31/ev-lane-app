@@ -77,6 +77,8 @@ public static class MauiProgram
 
         builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+        builder.Services.AddScoped<ISettingsService, SettingsService>();
+
         builder.Services.AddSingleton<IMediaPickerService, MediaPickerService>();
 
         builder
