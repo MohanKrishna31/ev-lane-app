@@ -1,0 +1,44 @@
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject nApps.Futs.Mobile.Shared.Navigation.IBackNavigationService BackNavigationService
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        NavigationManager.LocationChanged += OnLocationChanged;
+        BackNavigationService.PlatformGoBackRequested += HandlePlatformGoBackRequested;
+
+        // seed current location
+        BackNavigationService.NotifyNavigation(NavigationManager.Uri);
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs args)
+    {
+        BackNavigationService.NotifyNavigation(args.Location);
+        StateHasChanged();
+    }
+
+    private Task HandlePlatformGoBackRequested(string? target)
+    {
+        if (!string.IsNullOrEmpty(target))
+        {
+            NavigationManager.NavigateTo(target);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        try
+        {
+            NavigationManager.LocationChanged -= OnLocationChanged;
+            BackNavigationService.PlatformGoBackRequested -= HandlePlatformGoBackRequested;
+        }
+        catch { }
+    }
+}

@@ -98,6 +98,9 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
+        // Register back navigation service for centralized back handling
+        builder.Services.AddSingleton<nApps.Futs.Mobile.Shared.Navigation.IBackNavigationService, nApps.Futs.Mobile.Shared.Navigation.BackNavigationService>();
+
         return builder.Build();
     }
 }

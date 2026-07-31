@@ -96,6 +96,7 @@
       <Folder Include="Shared\Services\SignalR\" />
       <Folder Include="Shared\Utilities\" />
       <Folder Include="wwwroot\Images\" />
+      <Folder Include="wwwroot\Images\" />
     </ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="appsettings.json" />

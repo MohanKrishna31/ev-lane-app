@@ -1,0 +1,23 @@
+@inject nApps.Futs.Mobile.Shared.Navigation.IBackNavigationService BackNavigationService
+
+<button class="app-back-button" @onclick="HandleBack">
+    ← Back
+</button>
+
+@code {
+    async Task HandleBack()
+    {
+        if (BackNavigationService != null)
+        {
+            var handled = await BackNavigationService.TryGoBackAsync();
+            if (!handled)
+            {
+                // optionally show a confirmation or rely on hardware flow
+                if (Microsoft.Maui.Devices.DeviceInfo.Platform != Microsoft.Maui.Devices.DevicePlatform.Android)
+                {
+                    await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert("Exit", "You are at the root. Use system back to exit.", "OK");
+                }
+            }
+        }
+    }
+}
