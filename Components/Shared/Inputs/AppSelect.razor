@@ -2,16 +2,16 @@
 
 @typeparam TValue
 
-<div class="app-input">
+<div class="app-input-container">
 
     @if (!string.IsNullOrWhiteSpace(Label))
     {
-        <label class="app-input-label">
+        <label class="app-label">
             @Label
         </label>
     }
 
-    <select class="app-input-control"
+    <select class="app-input"
             value="@SelectedValue"
             @onchange="OnChanged"
             disabled="@Disabled">

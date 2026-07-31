@@ -16,15 +16,14 @@
 .app-switch-label {
     font-weight: 600;
     font-size: 15px;
+    color: var(--text-primary);
 }
 
 .app-switch-description {
     margin-top: 4px;
     font-size: 13px;
-    opacity: .7;
+    color: var(--text-secondary);
 }
-
-/* Switch */
 
 .switch {
     position: relative;
@@ -45,7 +44,7 @@
     cursor: pointer;
     transition: .3s;
     border-radius: 28px;
-    background: #ccc;
+    background: var(--border-subtle);
 }
 
     .slider:before {
@@ -58,10 +57,11 @@
         background: white;
         transition: .3s;
         border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
 input:checked + .slider {
-    background: #2196F3;
+    background: var(--primary);
 }
 
     input:checked + .slider:before {

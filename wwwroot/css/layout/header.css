@@ -1,11 +1,51 @@
 ﻿.app-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     margin-bottom: 24px;
+    padding: 8px 0;
 }
 
-    .app-header h2 {
-        margin: 0;
+.header-titles {
+    flex: 1;
+}
+
+.app-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.app-header p {
+    margin-top: 4px;
+    margin-bottom: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.back-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+    .back-btn:hover {
+        background: var(--bg-input);
     }
 
-    .app-header p {
-        margin-top: 6px;
+    .back-btn:active {
+        transform: scale(0.9);
+    }
+
+    .back-btn svg {
+        width: 24px;
+        height: 24px;
     }

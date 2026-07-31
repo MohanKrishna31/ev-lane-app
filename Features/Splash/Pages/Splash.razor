@@ -7,22 +7,144 @@
 @inject SplashViewModel ViewModel
 @inject NavigationManager Navigation
 
-<h3>Loading...</h3>
+@if (isCheckingAuth)
+{
+    <div class="onboarding-container" style="justify-content: center; align-items: center;">
+        <img src="Images/logo.png" alt="EVLane Logo" class="brand-logo" style="width: 120px;" />
+    </div>
+}
+else
+{
+    <div class="onboarding-container">
+        @if (currentStep == 0)
+        {
+            <div class="top-nav" style="justify-content: center;">
+                <div class="badge-pill">
+                    <span class="sparkle">✨</span> EV DRIVE COMPANION PORTAL
+                </div>
+            </div>
 
-<div class="text-center mt-5">
-    <h4>EV Lane</h4>
-    <p>Please wait...</p>
-</div>
+            <div class="main-content">
+                <img src="Images/logo.png" alt="EVLane Logo" class="brand-logo" />
+                <div class="text-section">
+                    <h1 class="brand-title">EVLANE</h1>
+                    <p class="brand-desc">
+                        Navigate securely, pre-plan highway charging stops, and authorize transactions seamlessly.
+                    </p>
+                </div>
+            </div>
+
+            <div class="action-footer">
+                <button class="btn-primary" @onclick="NextStep">
+                    GET STARTED <span class="arrow">→</span>
+                </button>
+                <p class="footer-meta">
+                    EVLANE manages end-to-end user transactions, station routing grids, and real-time charger analytics.
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="top-nav">
+                <button class="nav-btn-back" @onclick="PreviousStep">‹</button>
+                <button class="nav-btn-skip" @onclick="SkipToLogin">Skip</button>
+            </div>
+
+            <div class="main-content">
+                <div class="icon-card">
+                    @if (currentStep == 1)
+                    {
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    }
+                    else if (currentStep == 2)
+                    {
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                        </svg>
+                    }
+                    else if (currentStep == 3)
+                    {
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <path d="M9 12l2 2 4-4"></path>
+                        </svg>
+                    }
+                </div>
+
+                <div class="text-section">
+                    <h2 class="slide-title">@GetSlideTitle()</h2>
+                    <p class="slide-desc">@GetSlideDescription()</p>
+                </div>
+
+                <div class="pagination-dots">
+                    <span class="dot @(currentStep == 1 ? "active" : "")"></span>
+                    <span class="dot @(currentStep == 2 ? "active" : "")"></span>
+                    <span class="dot @(currentStep == 3 ? "active" : "")"></span>
+                </div>
+            </div>
+
+            <div class="action-footer">
+                <button class="btn-primary" @onclick="NextStep">
+                    @(currentStep == 3 ? "GET STARTED →" : "NEXT →")
+                </button>
+            </div>
+        }
+    </div>
+}
 
 @code {
+    private bool isCheckingAuth = true;
+    private int currentStep = 0;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
-            return;
+        if (!firstRender) return;
 
         var authenticated = await ViewModel.IsAuthenticatedAsync();
-        Navigation.NavigateTo(authenticated? AppRoutes.Dashboard: AppRoutes.Login,true);
+        if (authenticated)
+        {
+            Navigation.NavigateTo(AppRoutes.Dashboard, true);
+        }
+        else
+        {
+            isCheckingAuth = false;
+            StateHasChanged();
+        }
     }
 
+    private void NextStep()
+    {
+        if (currentStep < 3) currentStep++;
+        else SkipToLogin();
+    }
+
+    private void PreviousStep()
+    {
+        if (currentStep > 0) currentStep--;
+    }
+
+    private void SkipToLogin()
+    {
+        Navigation.NavigateTo(AppRoutes.Login);
+    }
+
+    private string GetSlideTitle() => currentStep switch
+    {
+        1 => "Smart Charging Grid",
+        2 => "Highway Trip Planner",
+        3 => "Secure Escrow Wallet",
+        _ => ""
+    };
+
+    private string GetSlideDescription() => currentStep switch
+    {
+        1 => "Locate compatible fast chargers near you instantly. Filter by connector type, charging speed, and real-time availability.",
+        2 => "Map safe pathways with deterministic battery range stops. Plan routes with optimal charger selection tailored to your vehicle's range.",
+        3 => "Pre-authorize power tokens to automatically settle bills. Enjoy secure, seamless, and contact-free charging transactions.",
+        _ => ""
+    };
 }

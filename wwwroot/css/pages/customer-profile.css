@@ -1,15 +1,125 @@
-﻿.profile-item {
+﻿/* Page Wrapper overriding standard padding */
+.profile-page-wrapper {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    padding-bottom: 24px;
+}
+
+/* -------------------------------------
+   Header Section (WhatsApp Style)
+-------------------------------------- */
+.profile-header-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px 24px;
+    background-color: var(--bg-main);
+}
+
+.profile-main-name {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin: 20px 0 8px 0;
+    text-align: center;
+}
+
+.profile-edit-text-btn {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 16px;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s;
+}
+
+    .profile-edit-text-btn:active {
+        opacity: 0.6;
+    }
+
+/* -------------------------------------
+   List Containers & Items
+-------------------------------------- */
+.profile-list-container {
     margin-bottom: 16px;
 }
 
-    .profile-item label {
-        display: block;
-        font-size: 12px;
-        color: gray;
-        margin-bottom: 4px;
+.profile-actions-container {
+    margin-top: 8px;
+    border-top: 8px solid var(--bg-input); /* Small visual divider between main list and actions */
+}
+
+.profile-list-item {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    background-color: var(--bg-main);
+    transition: background-color 0.2s ease;
+}
+
+    .profile-list-item.clickable {
+        cursor: pointer;
     }
 
-    .profile-item div {
-        font-size: 16px;
-        font-weight: 500;
+        .profile-list-item.clickable:active {
+            background-color: var(--bg-input);
+        }
+
+/* -------------------------------------
+   Icons & Text Content
+-------------------------------------- */
+.profile-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--text-secondary);
+    margin-right: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+    .profile-icon svg {
+        width: 100%;
+        height: 100%;
     }
+
+.profile-text-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 16px 0;
+    justify-content: center;
+}
+
+    /* Remove bottom border from last item in the list automatically */
+    .profile-list-container .profile-list-item:last-child .profile-text-content,
+    .profile-text-content.no-border {
+        border-bottom: none;
+    }
+
+.profile-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.profile-value {
+    font-size: 16px;
+    color: var(--text-primary);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Loading/Error States */
+.profile-loading, .profile-error {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-secondary);
+}

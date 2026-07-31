@@ -5,91 +5,142 @@
 @inject LoginViewModel ViewModel
 @inject NavigationManager Navigation
 
-
-<PageContainer>
-
-    <div class="login-page">
-
-
-        <AppHeader Title="EV Lane"
-                   Subtitle="Charge smarter. Drive further." />
-
-
-        <AppCard CssClass="login-card">
-
-
-            <AppTextBox Label="Mobile Number"
-                        Placeholder="Enter mobile number"
-                        Type="tel"
-                        Disabled="@ViewModel.IsBusy"
-                        @bind-Value="ViewModel.MobileNumber" />
-
-
-            @if (!ViewModel.OtpSent)
-            {
-                <AppButton Text="Send OTP"
-                           CssClass="primary-button"
-                           Disabled="@ViewModel.IsBusy"
-                           OnClick="SendOtpAsync" />
-            }
-
-
-            @if (ViewModel.OtpSent)
-            {
-
-                <AppTextBox Label="OTP"
-                            Placeholder="Enter OTP"
-                            Type="number"
-                            Disabled="@ViewModel.IsBusy"
-                            @bind-Value="ViewModel.Otp" />
-
-
-                <AppButton Text="Verify OTP"
-                           CssClass="primary-button"
-                           Disabled="@ViewModel.IsBusy"
-                           OnClick="VerifyOtpAsync" />
-
-            }
-
-
-            @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
-            {
-                <div class="error-message">
-
-                    @ViewModel.ErrorMessage
-
-                </div>
-            }
-
-
-        </AppCard>
-
-
+<div class="auth-container">
+    <div class="top-nav auth-header">
+        <button class="nav-btn-back" @onclick="GoBack" disabled="@ViewModel.IsBusy">‹</button>
+        <span class="header-title">LANER LOGIN</span>
+        <div style="width: 40px;"></div> <!-- Spacer for flexbox centering -->
     </div>
 
+    @if (ViewModel.OtpSent && showBanner)
+    {
+        <div class="alert-banner">
+            <div class="alert-content">
+                <span class="alert-icon">✓</span>
+                <p>OTP sent successfully. Check your messages.</p>
+            </div>
+            <button class="alert-close" @onclick="() => showBanner = false">CLOSE</button>
+        </div>
+    }
 
-</PageContainer>
+    <div class="main-content auth-content-wrapper">
+        <div class="brand-row">
+            <img src="Images/logo.png" alt="EVLane Logo" class="small-logo" />
+            <span class="brand-name">EVLANE</span>
+        </div>
 
+        @if (!ViewModel.OtpSent)
+        {
+            <div class="text-section text-left w-100">
+                <h1 class="page-heading">Charge smarter. Drive further.</h1>
+                <p class="page-subheading">
+                    Enter your mobile number to authorize secure escrow transit tokens and load dynamic routing.
+                </p>
+            </div>
+
+            <div class="form-group w-100">
+                <label class="input-label">MOBILE NUMBER</label>
+                <div class="input-wrapper @(string.IsNullOrEmpty(ViewModel.ErrorMessage) ? "" : "invalid-border")">
+                    <span class="input-icon">📱</span>
+                    <input type="tel" class="app-input" placeholder="e.g. 9098979619"
+                           @bind="ViewModel.MobileNumber"
+                           @bind:event="oninput"
+                           disabled="@ViewModel.IsBusy" />
+                </div>
+                @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+                {
+                    <span class="error-text">@ViewModel.ErrorMessage</span>
+                }
+            </div>
+
+            <button class="btn-primary w-100" @onclick="SendOtpAsync" disabled="@ViewModel.IsBusy">
+                <span class="btn-icon">🛡️</span>
+                @(ViewModel.IsBusy ? "REQUESTING..." : "REQUEST TRANSIT OTP")
+            </button>
+        }
+        else
+        {
+            <div class="text-section text-left w-100">
+                <h1 class="page-heading">Two-Factor Security</h1>
+                <p class="page-subheading">
+                    A validation check-in code has been dispatched. Enter code to verify.
+                </p>
+            </div>
+
+            <div class="form-group w-100">
+                <div class="input-wrapper @(string.IsNullOrEmpty(ViewModel.ErrorMessage) ? "" : "invalid-border")">
+                    <span class="input-icon">🔑</span>
+                    <input type="number" class="app-input" placeholder="Enter code"
+                           @bind="ViewModel.Otp"
+                           @bind:event="oninput"
+                           maxlength="6"
+                           disabled="@ViewModel.IsBusy" />
+                </div>
+                @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+                {
+                    <span class="error-text text-center">@ViewModel.ErrorMessage</span>
+                }
+            </div>
+
+            <div class="resend-wrapper w-100">
+                <span>Didn't receive code? </span>
+                <button class="link-btn" @onclick="ResendOtpAsync" disabled="@ViewModel.IsBusy">Resend OTP</button>
+            </div>
+
+            <button class="btn-primary w-100" @onclick="VerifyOtpAsync" disabled="@ViewModel.IsBusy">
+                <span class="btn-icon">🛡️</span>
+                @(ViewModel.IsBusy ? "VERIFYING..." : "AUTHORIZE ESCROW ACCESS")
+            </button>
+        }
+    </div>
+
+    <div class="action-footer">
+        <div class="crypto-footer">
+            <span class="sparkle" style="color: var(--primary);">✨</span> EVLANE CRYPTOGRAPHIC SETTLE CHANNEL
+        </div>
+    </div>
+</div>
 
 @code {
-
+    private bool showBanner = false;
 
     private async Task SendOtpAsync()
     {
+        ViewModel.ErrorMessage = string.Empty;
         await ViewModel.SendOtpAsync();
+
+        if (ViewModel.OtpSent)
+        {
+            showBanner = true;
+        }
     }
-
-
 
     private async Task VerifyOtpAsync()
     {
+        ViewModel.ErrorMessage = string.Empty;
         var success = await ViewModel.VerifyOtpAsync();
-
-
         if (success)
         {
             Navigation.NavigateTo("/dashboard");
         }
     }
 
+    private async Task ResendOtpAsync()
+    {
+        await ViewModel.SendOtpAsync();
+        showBanner = true;
+    }
+
+    private void GoBack()
+    {
+        if (ViewModel.OtpSent)
+        {
+            ViewModel.OtpSent = false;
+            ViewModel.ErrorMessage = string.Empty;
+        }
+        else
+        {
+            Navigation.NavigateTo("/"); // Go back to splash
+        }
+    }
 }

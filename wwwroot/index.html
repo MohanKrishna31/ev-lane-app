@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="nApps.Futs.Mobile.styles.css" />
     <link rel="icon" href="data:,">
+
+    <!-- Theme Manager Script -->
+    <script>
+        window.themeManager = {
+            setTheme: function (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('app-theme', theme);
+            },
+            getTheme: function () {
+                return localStorage.getItem('app-theme') || 'dark'; // Defaults to dark mode
+            },
+            initTheme: function () {
+                const theme = this.getTheme();
+                this.setTheme(theme);
+            }
+        };
+        // Run immediately to prevent theme flash on load
+        window.themeManager.initTheme();
+    </script>
 </head>
 
 <body>
@@ -25,5 +44,4 @@
     <script src="_framework/blazor.webview.js" autostart="false"></script>
 
 </body>
-
 </html>

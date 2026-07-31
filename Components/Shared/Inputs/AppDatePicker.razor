@@ -1,19 +1,20 @@
-﻿<div class="app-input">
+﻿<div class="app-input-container">
 
     @if (!string.IsNullOrWhiteSpace(Label))
     {
-        <label class="app-input-label">
+        <label class="app-label">
             @Label
         </label>
     }
 
-    <input class="app-input-control"
+    <input class="app-input"
            type="date"
            value="@DateValue"
            @onchange="OnValueChanged"
            disabled="@Disabled" />
 
 </div>
+
 @code
 {
     [Parameter]

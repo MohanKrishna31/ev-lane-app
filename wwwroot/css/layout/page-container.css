@@ -1,5 +1,10 @@
 ﻿.page-container {
     padding: 20px;
+    padding-bottom: 90px;
     min-height: 100vh;
-    background: var(--background);
+    background: var(--bg-main);
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    box-sizing: border-box;
 }

@@ -1,5 +1,6 @@
 ﻿.app-input-container {
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .app-label {
@@ -7,22 +8,56 @@
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text);
+    color: var(--text-secondary);
 }
 
 .app-input {
+    box-sizing: border-box; /* THIS FIXES THE RIGHT-SIDE BLEED */
     width: 100%;
     height: 52px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     padding: 0 16px;
-    background: white;
+    background: var(--bg-input);
+    color: var(--text-primary);
     font-size: 16px;
     outline: none;
-    transition: .2s;
+    transition: all 0.2s ease;
+    /* Tells the browser this input defaults to light mode */
+    color-scheme: light;
 }
 
     .app-input:focus {
         border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+        box-shadow: 0 0 0 3px rgba(27, 135, 81, 0.2);
     }
+
+    .app-input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--bg-main);
+    }
+
+/* 
+   ========================================
+   DARK MODE NATIVE FIXES 
+   ========================================
+*/
+
+/* Force the native Webview popups (Calendar/Dropdown) into dark mode */
+[data-theme='dark'] .app-input {
+    color-scheme: dark;
+}
+
+/* Ensure the dropdown items use your EV theme colors */
+.app-input option {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* Fallback: Force the calendar icon to turn white if the WebView is older */
+[data-theme='dark'] .app-input::-webkit-calendar-picker-indicator {
+    filter: invert(1) hue-rotate(180deg);
+    opacity: 0.7;
+    cursor: pointer;
+}

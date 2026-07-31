@@ -1,11 +1,53 @@
-﻿
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
+@using nApps.Futs.Mobile.Components.Shared.Buttons
 
 <div class="app-layout">
-    <main>
+    <!-- Top Bar for logged-in screens containing the Theme Toggle -->
+    <header class="main-header">
+        <div class="header-content">
+            <!-- You can add a logo or page title here on the left if desired -->
+            <div></div>
 
+            <ThemeToggle />
+        </div>
+    </header>
+
+    <main class="main-content-area">
         @Body
-
     </main>
+
+    <!-- Assuming BottomNavigation is your custom component -->
     <BottomNavigation />
 </div>
+
+<style>
+    .app-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: var(--background);
+    }
+
+    .main-header {
+        padding: 16px 24px;
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .main-content-area {
+        flex: 1;
+        overflow-y: auto;
+    }
+</style>

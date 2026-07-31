@@ -1,8 +1,32 @@
 ﻿@inherits LayoutComponentBase
+@using nApps.Futs.Mobile.Components.Shared.Buttons
 
+<div class="auth-layout-wrapper">
+    <!-- Theme Toggle positioned top right -->
+    <div class="theme-toggle-container">
+        <ThemeToggle />
+    </div>
 
-<div class="auth-layout">
-
-    @Body
-
+    <div class="auth-layout">
+        @Body
+    </div>
 </div>
+
+<style>
+    .auth-layout-wrapper {
+        position: relative;
+        min-height: 100vh;
+        background-color: var(--background);
+    }
+
+    .theme-toggle-container {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        z-index: 100;
+    }
+
+    .auth-layout {
+        min-height: inherit;
+    }
+</style>
