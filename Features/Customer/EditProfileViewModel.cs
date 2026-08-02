@@ -5,6 +5,7 @@ using nApps.Futs.Mobile.Shared.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace nApps.Futs.Mobile.Features.Customer;
 
@@ -49,6 +50,7 @@ public class EditProfileViewModel : BaseViewModel
             await _customerService.UpdateProfileAsync(Model);
         });
     }
+
     public IReadOnlyList<SelectOption<Gender>> GenderOptions { get; } =
     [
         new() { Value = Gender.Male, Text = "Male" },
@@ -56,6 +58,7 @@ public class EditProfileViewModel : BaseViewModel
         new() { Value = Gender.Unknown, Text = "Unknown" },
         new() { Value = Gender.Other, Text = "Other" }
     ];
+
     public async Task UploadPhotoAsync()
     {
         await ExecuteAsync(async () =>
@@ -67,22 +70,37 @@ public class EditProfileViewModel : BaseViewModel
 
             await using (file.Stream)
             {
-                await _customerService.UploadProfilePhotoAsync(
+                var result = await _customerService.UploadProfilePhotoAsync(
                     file.Stream,
                     file.FileName,
                     file.ContentType);
-            }
 
-            await LoadAsync();
+                // Instantly update the local UI with the new URL returned by the server
+                if (result != null && Customer != null)
+                {
+                    Customer.ProfilePhotoUrl = result.ProfilePhotoUrl;
+                    Customer.ProfilePhoto = result.ProfilePhoto;
+                    OnPropertyChanged(nameof(Customer));
+                }
+            }
+            // Intentionally NOT calling LoadAsync() here so we don't accidentally fetch stale data
         });
     }
+
     public async Task DeletePhotoAsync()
     {
         await ExecuteAsync(async () =>
         {
-            await _customerService.DeleteProfilePhotoAsync();
+            // Instantly clear the local UI data first
+            if (Customer != null)
+            {
+                Customer.ProfilePhotoUrl = null;
+                Customer.ProfilePhoto = null;
+                OnPropertyChanged(nameof(Customer));
+            }
 
-            await LoadAsync();
+            await _customerService.DeleteProfilePhotoAsync();
+            // Intentionally NOT calling LoadAsync() here so we don't accidentally fetch stale data
         });
     }
 }

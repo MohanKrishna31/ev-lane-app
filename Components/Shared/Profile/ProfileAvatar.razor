@@ -1,7 +1,7 @@
 ﻿<div class="profile-avatar" @onclick="HandleClick">
-    @if (!string.IsNullOrWhiteSpace(ImageUrl))
+    @if (!string.IsNullOrWhiteSpace(ImageUrl) && !imageError)
     {
-        <img src="@ImageUrl" alt="Profile" class="profile-avatar-image" />
+        <img src="@ImageUrl" alt="Profile" class="profile-avatar-image" @onerror="HandleImageError" />
     }
     else
     {
@@ -60,6 +60,25 @@
 
     [Parameter]
     public EventCallback OnAvatarClicked { get; set; }
+
+    private bool imageError = false;
+    private string? currentUrl = null;
+
+    protected override void OnParametersSet()
+    {
+        // Reset error state if a brand new URL comes in
+        if (currentUrl != ImageUrl)
+        {
+            currentUrl = ImageUrl;
+            imageError = false;
+        }
+    }
+
+    private async Task HandleImageError()
+    {
+        imageError = true;
+        await InvokeAsync(StateHasChanged);
+    }
 
     private async Task HandleClick()
     {

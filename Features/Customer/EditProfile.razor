@@ -7,16 +7,18 @@
 
     <AppHeader Title="Edit Profile" />
 
-    @if (ViewModel.IsBusy)
+    @if (ViewModel.IsBusy && ViewModel.Customer == null)
     {
         <p>Loading...</p>
     }
     else
     {
-        <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhotoUrl"
+        <!-- Key forces a refresh, GetImageUrl bypasses browser caching -->
+        <ProfileAvatar @key="_imageTimestamp"
+                       ImageUrl="@GetImageUrl(ViewModel.Customer?.ProfilePhotoUrl)"
                        OnAvatarClicked="HandleAvatarClick" />
 
-        <div class="form-container">
+        <div class="app-card edit-profile-card">
             <AppTextBox Label="Mobile Number"
                         Value="@ViewModel.Customer?.MobileNumber"
                         Disabled="true" />
@@ -31,7 +33,7 @@
                            Value="ViewModel.Model.DateOfBirth"
                            ValueChanged="@(value => ViewModel.Model.DateOfBirth = value)" />
 
-            <AppSelect TValue="Gender"
+            <AppSelect TValue="nApps.Futs.Mobile.Shared.Constants.Gender"
                        Label="Gender"
                        Value="ViewModel.Model.Gender"
                        ValueChanged="@(value => ViewModel.Model.Gender = value)"
@@ -41,25 +43,36 @@
                 <AppButton Text="Save"
                            OnClick="SaveAsync" />
             </div>
-
         </div>
     }
 
 </PageContainer>
 
+<style>
+    /* This perfectly matches the aesthetic of the Profile page */
+    .edit-profile-card {
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        border: none;
+        margin: 0 16px 24px 16px;
+        background-color: var(--bg-card);
+        padding: 24px 20px;
+    }
+</style>
+
 @code
 {
+    private long _imageTimestamp = DateTime.UtcNow.Ticks;
+
     protected override async Task OnInitializedAsync()
     {
         ViewModel.PropertyChanged += ViewModelChanged;
-
         await ViewModel.LoadAsync();
     }
 
     private async Task SaveAsync()
     {
         await ViewModel.SaveAsync();
-
         Navigation.NavigateTo("/customer/profile");
     }
 
@@ -74,18 +87,33 @@
         if (action == "📷 Camera/Gallery")
         {
             await ViewModel.UploadPhotoAsync();
+            await Task.Delay(500); // Give backend time to save the file before fetching
+            _imageTimestamp = DateTime.UtcNow.Ticks;
             await InvokeAsync(StateHasChanged);
         }
         else if (action == "🗑️ Remove photo")
         {
-            await ViewModel.DeletePhotoAsync();
+            // Instantly clear the image on the UI side just in case
+            if (ViewModel.Customer != null)
+            {
+                ViewModel.Customer.ProfilePhotoUrl = null;
+            }
+            _imageTimestamp = DateTime.UtcNow.Ticks;
             await InvokeAsync(StateHasChanged);
+
+            await ViewModel.DeletePhotoAsync();
         }
     }
 
-    private async void ViewModelChanged(
-        object? sender,
-        System.ComponentModel.PropertyChangedEventArgs e)
+    private string? GetImageUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return null;
+
+        var separator = url.Contains("?") ? "&" : "?";
+        return $"{url}{separator}t={_imageTimestamp}";
+    }
+
+    private async void ViewModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         await InvokeAsync(StateHasChanged);
     }

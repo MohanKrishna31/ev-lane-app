@@ -1,26 +1,53 @@
 ﻿.app-header {
+    background-color: var(--bg-card);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 10;
+}
+
+.header-content {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
-    padding: 8px 0;
 }
+
+.hamburger-menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 8px;
+    margin: -8px; /* Offset padding for larger click area */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+}
+
+    .hamburger-menu-btn:active {
+        opacity: 0.6;
+    }
 
 .header-titles {
     flex: 1;
 }
 
-.app-header h2 {
-    margin: 0;
-    color: var(--text-primary);
-}
+    .header-titles h2,
+    .app-header h2 {
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 20px;
+        font-weight: 600;
+    }
 
-.app-header p {
-    margin-top: 4px;
-    margin-bottom: 0;
-    color: var(--text-secondary);
-    font-size: 14px;
-}
+    .header-titles .subtitle,
+    .app-header p {
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
 
 .back-btn {
     background: transparent;

@@ -9,10 +9,12 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: var(--bg-card);
+    background-color: var(--bg-card); /* Bound properly to theme variable */
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06); /* WhatsApp style top elevation shadow */
     border-top: 1px solid var(--border-subtle);
     z-index: 1000;
     padding-bottom: env(safe-area-inset-bottom);
+    transition: background-color 0.3s ease; /* Smooth transition on toggle */
 }
 
     .bottom-navigation button {
@@ -31,12 +33,13 @@
 
         .bottom-navigation button:hover {
             color: var(--primary);
-            background: var(--bg-input);
         }
 
         .bottom-navigation button:active {
             color: var(--primary-dark);
             transform: scale(0.95);
+            background-color: var(--bg-input); /* Small feedback ring */
+            border-radius: var(--radius-sm);
         }
 
 .nav-icon {

@@ -12,19 +12,20 @@
 }
 
 .app-input {
-    box-sizing: border-box; /* THIS FIXES THE RIGHT-SIDE BLEED */
+    box-sizing: border-box;
     width: 100%;
     height: 52px;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     padding: 0 16px;
+    /* CHANGED: Back to input background so it pops off the card background! */
     background: var(--bg-input);
     color: var(--text-primary);
     font-size: 16px;
     outline: none;
     transition: all 0.2s ease;
-    /* Tells the browser this input defaults to light mode */
-    color-scheme: light;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    color-scheme: dark;
 }
 
     .app-input:focus {
@@ -38,26 +39,44 @@
         background: var(--bg-main);
     }
 
-/* 
-   ========================================
-   DARK MODE NATIVE FIXES 
-   ========================================
-*/
-
-/* Force the native Webview popups (Calendar/Dropdown) into dark mode */
-[data-theme='dark'] .app-input {
-    color-scheme: dark;
+/* Ensure select dropdown arrow doesn't clip text */
+select.app-input {
+    appearance: auto;
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    padding-right: 32px;
 }
 
-/* Ensure the dropdown items use your EV theme colors */
 .app-input option {
-    background-color: var(--bg-main);
+    background-color: var(--bg-card);
     color: var(--text-primary);
 }
 
-/* Fallback: Force the calendar icon to turn white if the WebView is older */
-[data-theme='dark'] .app-input::-webkit-calendar-picker-indicator {
-    filter: invert(1) hue-rotate(180deg);
-    opacity: 0.7;
+/* 
+   ========================================
+   PERFECT CALENDAR ICON FIX
+   ========================================
+*/
+.app-input[type="date"]::-webkit-calendar-picker-indicator {
+    /* brightness(0) makes it pure black, invert(1) flips it to pure white */
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
     cursor: pointer;
 }
+
+/* 
+   ========================================
+   LIGHT MODE OVERRIDES
+   ========================================
+*/
+[data-theme='light'] .app-input {
+    color-scheme: light;
+    background: var(--bg-input);
+}
+
+    /* Revert the invert hack for light mode calendar so it stays dark */
+    [data-theme='light'] .app-input[type="date"]::-webkit-calendar-picker-indicator {
+        /* Forces it to be dark/black */
+        filter: brightness(0);
+        opacity: 0.7;
+    }

@@ -1,4 +1,4 @@
-﻿/* Page Wrapper overriding standard padding */
+﻿/* Page Wrapper */
 .profile-page-wrapper {
     background-color: var(--bg-main);
     min-height: 100vh;
@@ -6,22 +6,22 @@
 }
 
 /* -------------------------------------
-   Header Section (WhatsApp Style)
+   Header Section
 -------------------------------------- */
 .profile-header-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 32px 16px 24px;
+    padding: 24px 16px 32px;
     background-color: var(--bg-main);
 }
 
 .profile-main-name {
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 600;
     color: var(--text-primary);
-    margin: 20px 0 8px 0;
+    margin: 16px 0 4px 0;
     text-align: center;
 }
 
@@ -30,9 +30,9 @@
     border: none;
     color: var(--primary);
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    padding: 4px 16px;
+    padding: 8px 16px;
     letter-spacing: 0.5px;
     transition: opacity 0.2s;
 }
@@ -42,22 +42,25 @@
     }
 
 /* -------------------------------------
-   List Containers & Items
+   WhatsApp Style List Containers (Cards)
 -------------------------------------- */
-.profile-list-container {
-    margin-bottom: 16px;
-}
-
+.profile-list-container,
 .profile-actions-container {
-    margin-top: 8px;
-    border-top: 8px solid var(--bg-input); /* Small visual divider between main list and actions */
+    background-color: var(--bg-card);
+    border-radius: var(--radius-md);
+    margin: 0 16px 24px 16px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden; /* Keeps child items strictly inside the rounded corners */
 }
 
+/* -------------------------------------
+   List Items
+-------------------------------------- */
 .profile-list-item {
     display: flex;
     align-items: center;
-    padding: 0 24px;
-    background-color: var(--bg-main);
+    padding: 0 20px;
+    background-color: var(--bg-card);
     transition: background-color 0.2s ease;
 }
 
@@ -76,7 +79,7 @@
     width: 24px;
     height: 24px;
     color: var(--text-secondary);
-    margin-right: 24px;
+    margin-right: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -97,14 +100,14 @@
     justify-content: center;
 }
 
-    /* Remove bottom border from last item in the list automatically */
-    .profile-list-container .profile-list-item:last-child .profile-text-content,
+    /* Remove bottom border from last item in the group */
+    .profile-list-item:last-child .profile-text-content,
     .profile-text-content.no-border {
         border-bottom: none;
     }
 
 .profile-label {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-secondary);
     margin-bottom: 4px;
     font-weight: 500;
@@ -113,7 +116,7 @@
 .profile-value {
     font-size: 16px;
     color: var(--text-primary);
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.4;
 }
 

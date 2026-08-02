@@ -29,6 +29,7 @@
     --radius-lg: 20px;
     --radius-full: 9999px;
     /* Shadow */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.25);
     --shadow: 0 8px 24px rgba(0,0,0,.4);
     /* Spacing */
     --space-xs: 4px;
@@ -54,5 +55,6 @@
     --pill-border: rgba(27, 135, 81, 0.2);
     --pill-text: #146c40; /* Darker green text for readability */
     /* Light Theme Shadow */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
     --shadow: 0 4px 12px rgba(0,0,0,.08);
 }
