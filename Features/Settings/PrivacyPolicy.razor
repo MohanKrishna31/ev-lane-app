@@ -1,0 +1,15 @@
+@page "/settings/privacy-policy"
+
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="Privacy Policy" Subtitle="Privacy policy details will be published here." />
+    <AppCard>
+        <p>The complete EVLane privacy policy is being prepared and will be added in a future update.</p>
+    </AppCard>
+    <AppButton Text="Back to Settings" OnClick="GoBack" />
+</PageContainer>
+
+@code {
+    private void GoBack() => Navigation.NavigateTo(AppRoutes.Settings);
+}

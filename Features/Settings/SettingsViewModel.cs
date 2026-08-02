@@ -8,10 +8,14 @@ namespace nApps.Futs.Mobile.Features.Settings;
 public class SettingsViewModel : BaseViewModel
 {
     private readonly ISettingsService _settingsService;
+    private readonly nApps.Futs.Mobile.Shared.Services.Storage.IStorageService _storageService;
 
-    public SettingsViewModel(ISettingsService settingsService)
+    public SettingsViewModel(
+        ISettingsService settingsService,
+        nApps.Futs.Mobile.Shared.Services.Storage.IStorageService storageService)
     {
         _settingsService = settingsService;
+        _storageService = storageService;
     }
     public bool PushNotificationsEnabled { get; set; } = true;
 
@@ -26,6 +30,11 @@ public class SettingsViewModel : BaseViewModel
     public string PreferredLanguage { get; set; } = "English";
     public async Task LoadAsync()
     {
+        BiometricLoginEnabled = _storageService.GetPreference(
+            nApps.Futs.Mobile.Shared.Constants.StorageKeys.BiometricLoginEnabled,
+            false);
+        OnPropertyChanged(nameof(BiometricLoginEnabled));
+
         await ExecuteAsync(async () =>
         {
             var settings = await _settingsService.GetAsync();
@@ -38,14 +47,12 @@ public class SettingsViewModel : BaseViewModel
             ChargingNotificationsEnabled = settings.ChargingNotificationsEnabled;
             WalletNotificationsEnabled = settings.WalletNotificationsEnabled;
             PromotionalNotificationsEnabled = settings.PromotionalNotificationsEnabled;
-            BiometricLoginEnabled = settings.BiometricLoginEnabled;
 
             OnPropertyChanged(nameof(PreferredLanguage));
             OnPropertyChanged(nameof(PushNotificationsEnabled));
             OnPropertyChanged(nameof(ChargingNotificationsEnabled));
             OnPropertyChanged(nameof(WalletNotificationsEnabled));
             OnPropertyChanged(nameof(PromotionalNotificationsEnabled));
-            OnPropertyChanged(nameof(BiometricLoginEnabled));
         });
     }
     public async Task SaveAsync()
@@ -58,8 +65,7 @@ public class SettingsViewModel : BaseViewModel
                 PushNotificationsEnabled = PushNotificationsEnabled,
                 ChargingNotificationsEnabled = ChargingNotificationsEnabled,
                 WalletNotificationsEnabled = WalletNotificationsEnabled,
-                PromotionalNotificationsEnabled = PromotionalNotificationsEnabled,
-                BiometricLoginEnabled = BiometricLoginEnabled
+                PromotionalNotificationsEnabled = PromotionalNotificationsEnabled
             };
 
             var settings = await _settingsService.UpdateAsync(request);
@@ -72,14 +78,16 @@ public class SettingsViewModel : BaseViewModel
             ChargingNotificationsEnabled = settings.ChargingNotificationsEnabled;
             WalletNotificationsEnabled = settings.WalletNotificationsEnabled;
             PromotionalNotificationsEnabled = settings.PromotionalNotificationsEnabled;
-            BiometricLoginEnabled = settings.BiometricLoginEnabled;
 
             OnPropertyChanged(nameof(PreferredLanguage));
             OnPropertyChanged(nameof(PushNotificationsEnabled));
             OnPropertyChanged(nameof(ChargingNotificationsEnabled));
             OnPropertyChanged(nameof(WalletNotificationsEnabled));
             OnPropertyChanged(nameof(PromotionalNotificationsEnabled));
-            OnPropertyChanged(nameof(BiometricLoginEnabled));
         });
+
+        _storageService.SetPreference(
+            nApps.Futs.Mobile.Shared.Constants.StorageKeys.BiometricLoginEnabled,
+            BiometricLoginEnabled);
     }
 }

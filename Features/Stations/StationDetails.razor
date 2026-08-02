@@ -1,0 +1,56 @@
+@page "/stations/{StationId:guid}"
+@implements IDisposable
+
+@inject StationDetailsViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageContainer>
+    @if (ViewModel.IsBusy)
+    {
+        <p>Loading station...</p>
+    }
+    else if (ViewModel.Station is null)
+    {
+        <AppCard><p>@(ViewModel.ErrorMessage ?? "Station was not found.")</p></AppCard>
+    }
+    else
+    {
+        <AppHeader Title="@(ViewModel.Station.Name ?? "Charging Station")"
+                   Subtitle="@ViewModel.Station.Address" />
+        <AppCard Title="Availability">
+            <p>@ViewModel.Station.AvailableConnectorCount of @ViewModel.Station.TotalConnectorCount connectors available</p>
+            <p>Maximum power: @(ViewModel.Station.MaximumPowerKw?.ToString() ?? "N/A") kW</p>
+            <p>Hours: @(ViewModel.Station.BusinessHours ?? "Not provided")</p>
+            <p>Facilities: @(ViewModel.Station.Facilities ?? "Not provided")</p>
+        </AppCard>
+
+        @foreach (var charger in ViewModel.Station.Chargers)
+        {
+            <AppCard Title="@(charger.ChargerCode ?? "Charger")">
+                <p>@(charger.IsOnline ? "Online" : "Offline")</p>
+                @foreach (var connector in charger.Connectors)
+                {
+                    <p>Connector @connector.ConnectorId · @(connector.MaxPowerKw?.ToString() ?? "N/A") kW · @(connector.CanStart ? "Available" : "Unavailable")</p>
+                }
+            </AppCard>
+        }
+    }
+
+    <AppButton Text="Back to Stations" OnClick="GoBack" />
+</PageContainer>
+
+@code {
+    [Parameter] public Guid StationId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ViewModel.PropertyChanged -= ViewModelChanged;
+        ViewModel.PropertyChanged += ViewModelChanged;
+        await ViewModel.LoadAsync(StationId);
+    }
+
+    private void GoBack() => Navigation.NavigateTo(AppRoutes.Stations);
+    private async void ViewModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) =>
+        await InvokeAsync(StateHasChanged);
+    public void Dispose() => ViewModel.PropertyChanged -= ViewModelChanged;
+}

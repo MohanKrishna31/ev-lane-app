@@ -15,6 +15,4 @@ public class UpdateSettingsRequest
     public bool WalletNotificationsEnabled { get; set; }
 
     public bool PromotionalNotificationsEnabled { get; set; }
-
-    public bool BiometricLoginEnabled { get; set; }
 }

@@ -1,0 +1,110 @@
+@page "/vehicles/new"
+@page "/vehicles/{VehicleId:guid}/edit"
+@implements IDisposable
+
+@inject VehicleEditViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="@(VehicleId.HasValue ? "Edit Vehicle" : "Add Vehicle")"
+               Subtitle="Select your exact EV variant for compatible charging information." />
+
+    @if (ViewModel.IsBusy)
+    {
+        <p>Loading vehicle...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+        {
+            <AppCard><p>@ViewModel.ErrorMessage</p></AppCard>
+        }
+
+        <AppCard Title="Vehicle">
+            <AppSelect TValue="Guid"
+                       Label="Manufacturer"
+                       Value="ViewModel.SelectedManufacturerId"
+                       ValueChanged="ViewModel.ManufacturerChangedAsync"
+                       Items="ViewModel.Manufacturers" />
+
+            <AppSelect TValue="Guid"
+                       Label="Model"
+                       Value="ViewModel.SelectedModelId"
+                       ValueChanged="ViewModel.ModelChangedAsync"
+                       Items="ViewModel.Models"
+                       Disabled="@(ViewModel.SelectedManufacturerId == Guid.Empty)" />
+
+            <AppSelect TValue="Guid"
+                       Label="Variant"
+                       Value="ViewModel.Model.VehicleVariantId"
+                       ValueChanged="ViewModel.VariantChanged"
+                       Items="ViewModel.Variants"
+                       Disabled="@(ViewModel.SelectedModelId == Guid.Empty)" />
+
+            <AppTextBox Label="Registration Number"
+                        Placeholder="e.g. KA01AB1234"
+                        @bind-Value="ViewModel.Model.RegistrationNumber" />
+
+            <AppTextBox Label="Nickname"
+                        Placeholder="e.g. My EV"
+                        @bind-Value="ViewModel.Model.NickName" />
+
+            <AppTextBox Label="Color"
+                        @bind-Value="ViewModel.Model.Color" />
+
+            <AppTextBox Label="VIN Number"
+                        Placeholder="17-character VIN"
+                        @bind-Value="ViewModel.Model.VinNumber" />
+
+            <div class="app-input-container">
+                <label class="app-label">Current Odometer (km)</label>
+                <input class="app-input" type="number" min="0" step="1"
+                       @bind="ViewModel.Model.CurrentOdometerKm" />
+            </div>
+
+            <AppSwitch Label="Default Vehicle"
+                       Description="Use this vehicle by default for station compatibility."
+                       @bind-Value="ViewModel.Model.IsDefault" />
+        </AppCard>
+
+        <div class="vehicle-form-actions">
+            <AppButton Text="Save Vehicle" OnClick="Save" />
+            <AppButton Text="Cancel" OnClick="Cancel" />
+        </div>
+    }
+</PageContainer>
+
+<style>
+    .vehicle-form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public Guid? VehicleId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ViewModel.PropertyChanged -= ViewModelChanged;
+        ViewModel.PropertyChanged += ViewModelChanged;
+        await ViewModel.LoadAsync(VehicleId);
+    }
+
+    private async Task Save()
+    {
+        if (await ViewModel.SaveAsync())
+        {
+            Navigation.NavigateTo(AppRoutes.Vehicles);
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo(AppRoutes.Vehicles);
+
+    private async void ViewModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) =>
+        await InvokeAsync(StateHasChanged);
+
+    public void Dispose() => ViewModel.PropertyChanged -= ViewModelChanged;
+}

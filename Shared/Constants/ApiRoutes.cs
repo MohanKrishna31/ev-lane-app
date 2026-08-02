@@ -12,23 +12,37 @@ public static class ApiRoutes
 
         public const string VerifyOtp = "/connect/token";
 
-        public const string Logout = "/connect/revocation";
+        public const string Logout = "/api/app/mobile-auth/logout";
     }
 
     public static class Customer
     {
-        public const string Profile = "/api/app/customer/me";
+        public const string Profile = "/api/app/customer/profile";
+
+        public const string ProfilePhoto = "/api/app/customer/profile-photo";
+
+        public const string Settings = "/api/app/customer/settings";
+
+        public const string Account = "/api/app/customer/account";
     }
 
     public static class Vehicle
     {
-        public const string List = "/api/app/vehicle";
+        public const string Base = "/api/app/customer-vehicle";
 
-        public const string Create = "/api/app/vehicle";
+        public const string MyVehicles = Base + "/my-vehicles";
 
-        public const string Update = "/api/app/vehicle";
+        public const string ActiveManufacturers = "/api/app/manufacturer/active-list";
 
-        public const string Delete = "/api/app/vehicle";
+        public static string ById(Guid id) => $"{Base}/{id}";
+
+        public static string SetDefault(Guid id) => $"{Base}/{id}/set-default";
+
+        public static string ModelsByManufacturer(Guid manufacturerId) =>
+            $"/api/app/vehicle-model/by-manufacturer/{manufacturerId}";
+
+        public static string VariantsByModel(Guid vehicleModelId) =>
+            $"/api/app/vehicle-variant/by-model/{vehicleModelId}";
     }
 
     public static class Station

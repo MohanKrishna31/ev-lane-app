@@ -30,6 +30,13 @@ public class ApiService : IApiService
         return await response.Content.ReadFromJsonAsync<TResponse>();
     }
 
+    public async Task PostAsync(string endpoint)
+    {
+        var response = await _httpClient.PostAsync(endpoint, content: null);
+
+        response.EnsureSuccessStatusCode();
+    }
+
     public async Task<TResponse?> PostFormAsync<TResponse>(string endpoint,Dictionary<string, string> formData)
     {
         var content = new FormUrlEncodedContent(formData);

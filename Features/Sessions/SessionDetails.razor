@@ -1,0 +1,44 @@
+@page "/sessions/{SessionId:guid}"
+@implements IDisposable
+@using Microsoft.JSInterop
+
+@inject SessionDetailsViewModel ViewModel
+@inject NavigationManager Navigation
+@inject Microsoft.JSInterop.IJSRuntime JS
+
+<PageContainer>
+    @if (ViewModel.IsBusy) { <p>Loading session...</p> }
+    else if (ViewModel.Session is null) { <AppCard><p>@(ViewModel.ErrorMessage ?? "Session not found.")</p></AppCard> }
+    else
+    {
+        <AppHeader Title="@(ViewModel.Session.StationName ?? "Charging Session")" Subtitle="@ViewModel.Session.ChargerCode" />
+        <AppCard Title="Session Summary">
+            <p>Vehicle: @(ViewModel.Session.VehicleName ?? ViewModel.Session.RegistrationNumber ?? "N/A")</p>
+            <p>Connector: @ViewModel.Session.ConnectorId</p>
+            <p>Started: @ViewModel.Session.StartTime.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</p>
+            <p>Stopped: @(ViewModel.Session.StopTime?.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt") ?? "Active")</p>
+            <p>Energy: @ViewModel.Session.EnergyKwh.ToString("0.00") kWh</p>
+            <p>Cost: @(ViewModel.Session.Currency ?? "INR") @ViewModel.Session.Cost.ToString("0.00")</p>
+            <p>Wallet paid: @ViewModel.Session.WalletDebitedAmount.ToString("0.00")</p>
+            <p>Outstanding: @ViewModel.Session.OutstandingAmount.ToString("0.00")</p>
+        </AppCard>
+        @if (!ViewModel.Session.StopTime.HasValue)
+        {
+            <AppButton Text="Request Stop" OnClick="RequestStop" Disabled="ViewModel.IsBusy" />
+        }
+    }
+    <AppButton Text="Back to Sessions" OnClick="Back" />
+</PageContainer>
+
+@code {
+    [Parameter] public Guid SessionId { get; set; }
+    protected override async Task OnParametersSetAsync() { ViewModel.PropertyChanged -= Changed; ViewModel.PropertyChanged += Changed; await ViewModel.LoadAsync(SessionId); }
+    private void Back() => Navigation.NavigateTo(AppRoutes.Sessions);
+    private async Task RequestStop()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Stop this charging session?"))
+            await ViewModel.RequestStopAsync();
+    }
+    private async void Changed(object? s, System.ComponentModel.PropertyChangedEventArgs e) => await InvokeAsync(StateHasChanged);
+    public void Dispose() => ViewModel.PropertyChanged -= Changed;
+}

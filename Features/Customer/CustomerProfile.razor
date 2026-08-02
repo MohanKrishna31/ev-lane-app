@@ -1,6 +1,10 @@
 ﻿@page "/customer/profile"
 
+
+@using nApps.Futs.Mobile.Features.Authentication
+
 @inject CustomerViewModel ViewModel
+@inject IAuthenticationService AuthenticationService
 @inject NavigationManager Navigation
 
 <PageContainer>
@@ -163,10 +167,9 @@
     {
         Navigation.NavigateTo("/customer/edit");
     }
-
-    private void Logout()
+    private async Task Logout()
     {
-        SecureStorage.RemoveAll();
+        await AuthenticationService.LogoutAsync();
         Navigation.NavigateTo("/login");
     }
 

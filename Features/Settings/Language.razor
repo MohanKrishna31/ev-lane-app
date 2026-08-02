@@ -1,0 +1,16 @@
+@page "/settings/language"
+
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="Language" Subtitle="Language selection will be available in a future update." />
+    <AppCard>
+        <p>Your preferred language continues to be managed through your account settings.</p>
+        <p>Additional language choices will appear here when translations are available.</p>
+    </AppCard>
+    <AppButton Text="Back to Settings" OnClick="GoBack" />
+</PageContainer>
+
+@code {
+    private void GoBack() => Navigation.NavigateTo(AppRoutes.Settings);
+}

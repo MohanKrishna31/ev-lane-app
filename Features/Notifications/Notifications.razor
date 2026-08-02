@@ -1,0 +1,21 @@
+@page "/notifications"
+@implements IDisposable
+@inject NotificationsViewModel ViewModel
+<PageContainer>
+    <AppHeader Title="Notifications" Subtitle="@($"{ViewModel.UnreadCount} unread")" />
+    @if (ViewModel.IsBusy) { <p>Loading notifications...</p> }
+    else if (ViewModel.Notifications.Count == 0) { <AppCard><p>No notifications found.</p></AppCard> }
+    @foreach (var item in ViewModel.Notifications)
+    {
+        <AppCard>
+            <div @onclick="@(() => ViewModel.MarkReadAsync(item))" style="cursor:pointer;opacity:@(item.IsRead ? "0.7" : "1")">
+                <h3>@(item.Title ?? "Notification")</h3><p>@item.Message</p><small>@item.Time.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</small>
+            </div>
+        </AppCard>
+    }
+</PageContainer>
+@code {
+    protected override async Task OnInitializedAsync(){ViewModel.PropertyChanged += Changed; await ViewModel.LoadAsync();}
+    private async void Changed(object? s,System.ComponentModel.PropertyChangedEventArgs e)=>await InvokeAsync(StateHasChanged);
+    public void Dispose()=>ViewModel.PropertyChanged-=Changed;
+}

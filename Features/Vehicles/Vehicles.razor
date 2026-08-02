@@ -1,0 +1,105 @@
+@page "/vehicles"
+@implements IDisposable
+
+@using Microsoft.JSInterop
+
+@inject VehiclesViewModel ViewModel
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageContainer>
+    <AppHeader Title="My Vehicles" Subtitle="Manage the vehicles linked to your account." />
+
+    <AppButton Text="Add Vehicle" OnClick="AddVehicle" />
+
+    @if (ViewModel.IsBusy)
+    {
+        <p>Loading vehicles...</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+    {
+        <AppCard><p>@ViewModel.ErrorMessage</p></AppCard>
+    }
+    else if (ViewModel.Vehicles.Count == 0)
+    {
+        <AppCard>
+            <h3>No vehicles added</h3>
+            <p>Add your EV to get compatible chargers and charging information.</p>
+        </AppCard>
+    }
+    else
+    {
+        @foreach (var vehicle in ViewModel.Vehicles)
+        {
+            <AppCard>
+                <div class="vehicle-card-title">
+                    <h3>@(vehicle.NickName ?? vehicle.VehicleModelName ?? "Vehicle")</h3>
+                    @if (vehicle.IsDefault)
+                    {
+                        <span class="vehicle-default-badge">Default</span>
+                    }
+                </div>
+                <p><strong>@vehicle.ManufacturerName @vehicle.VehicleModelName</strong></p>
+                <p>@vehicle.VehicleVariantName · @vehicle.RegistrationNumber</p>
+                <p>@vehicle.BatteryCapacityKWh.ToString("0.#") kWh · @vehicle.ConnectorTypeName</p>
+
+                <div class="vehicle-actions">
+                    <AppButton Text="Edit" OnClick="@(() => EditVehicle(vehicle.Id))" />
+                    @if (!vehicle.IsDefault)
+                    {
+                        <AppButton Text="Set Default" OnClick="@(() => SetDefault(vehicle.Id))" />
+                    }
+                    <AppButton Text="Delete" OnClick="@(() => DeleteVehicle(vehicle))" />
+                </div>
+            </AppCard>
+        }
+    }
+</PageContainer>
+
+<style>
+    .vehicle-card-title, .vehicle-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .vehicle-default-badge {
+        border-radius: 999px;
+        padding: 4px 10px;
+        color: var(--primary);
+        background: var(--surface);
+        border: 1px solid var(--primary);
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        ViewModel.PropertyChanged += ViewModelChanged;
+        await ViewModel.LoadAsync();
+    }
+
+    private void AddVehicle() => Navigation.NavigateTo(AppRoutes.VehicleCreate);
+
+    private void EditVehicle(Guid id) => Navigation.NavigateTo(AppRoutes.VehicleEdit(id));
+
+    private Task SetDefault(Guid id) => ViewModel.SetDefaultAsync(id);
+
+    private async Task DeleteVehicle(CustomerVehicleDto vehicle)
+    {
+        var name = vehicle.NickName ?? vehicle.RegistrationNumber ?? "this vehicle";
+        if (await JS.InvokeAsync<bool>("confirm", $"Delete {name}?"))
+        {
+            await ViewModel.DeleteAsync(vehicle.Id);
+        }
+    }
+
+    private async void ViewModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) =>
+        await InvokeAsync(StateHasChanged);
+
+    public void Dispose() => ViewModel.PropertyChanged -= ViewModelChanged;
+}

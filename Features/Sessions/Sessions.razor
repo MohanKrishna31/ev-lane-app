@@ -1,0 +1,32 @@
+@page "/sessions"
+@implements IDisposable
+
+@inject SessionsViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="Charging Sessions" Subtitle="Your current and previous charging activity." />
+    @if (ViewModel.IsBusy) { <p>Loading sessions...</p> }
+    else if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage)) { <AppCard><p>@ViewModel.ErrorMessage</p></AppCard> }
+    else if (ViewModel.Sessions.Count == 0) { <AppCard><p>No charging sessions found.</p></AppCard> }
+    else
+    {
+        @foreach (var session in ViewModel.Sessions)
+        {
+            <AppCard>
+                <h3>@(session.StationName ?? "Charging Session")</h3>
+                <p>@session.StartTime.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</p>
+                <p>@session.EnergyKwh.ToString("0.00") kWh · @(session.Currency ?? "INR") @session.Cost.ToString("0.00")</p>
+                <p>@(session.StopTime.HasValue ? "Completed" : "Active")</p>
+                <AppButton Text="View Details" OnClick="@(() => Open(session.Id))" />
+            </AppCard>
+        }
+    }
+</PageContainer>
+
+@code {
+    protected override async Task OnInitializedAsync() { ViewModel.PropertyChanged += Changed; await ViewModel.LoadAsync(); }
+    private void Open(Guid id) => Navigation.NavigateTo(AppRoutes.SessionDetails(id));
+    private async void Changed(object? s, System.ComponentModel.PropertyChangedEventArgs e) => await InvokeAsync(StateHasChanged);
+    public void Dispose() => ViewModel.PropertyChanged -= Changed;
+}

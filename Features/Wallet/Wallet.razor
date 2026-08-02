@@ -1,0 +1,46 @@
+@page "/wallet"
+@implements IDisposable
+@using Microsoft.JSInterop
+@inject WalletViewModel ViewModel
+@inject IJSRuntime JS
+
+<PageContainer>
+    <AppHeader Title="Wallet" Subtitle="Manage balance and charging payments." />
+    @if (ViewModel.Balance is not null)
+    {
+        <AppCard Title="Available Balance"><h2>@(ViewModel.Balance.Currency ?? "INR") @ViewModel.Balance.Balance.ToString("0.00")</h2></AppCard>
+    }
+    <AppCard Title="Add Money">
+        <div class="app-input-container"><label class="app-label">Amount</label><input class="app-input" type="number" min="1" max="100000" step="1" @bind="ViewModel.TopUpAmount" /></div>
+        <AppButton Text="Proceed to Pay" OnClick="TopUp" Disabled="ViewModel.IsBusy" />
+    </AppCard>
+    @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage)) { <AppCard><p>@ViewModel.ErrorMessage</p></AppCard> }
+    <AppCard Title="Transactions">
+        @if (ViewModel.Transactions.Count == 0) { <p>No transactions found.</p> }
+        @foreach (var item in ViewModel.Transactions)
+        {
+            <div class="wallet-row"><div><strong>@(item.Description ?? "Wallet transaction")</strong><br /><small>@item.OccurredAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</small></div><strong>@(item.Currency ?? "INR") @item.Amount.ToString("0.00")</strong></div>
+        }
+    </AppCard>
+    <AppCard Title="Top-up History">
+        @if (ViewModel.TopUps.Count == 0) { <p>No top-ups found.</p> }
+        @foreach (var item in ViewModel.TopUps) { <div class="wallet-row"><span>@item.RequestedAt.ToLocalTime().ToString("dd MMM yyyy")</span><strong>@(item.Currency ?? "INR") @item.Amount.ToString("0.00")</strong></div> }
+    </AppCard>
+</PageContainer>
+<style>.wallet-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}</style>
+@code {
+    protected override async Task OnInitializedAsync(){ViewModel.PropertyChanged += Changed; await ViewModel.LoadAsync();}
+    private async Task TopUp()
+    {
+        try
+        {
+            var checkout = await ViewModel.CreateTopUpAsync();
+            if (checkout is null || string.IsNullOrWhiteSpace(checkout.KeyId) || string.IsNullOrWhiteSpace(checkout.ProviderOrderId)) { ViewModel.ErrorMessage = "Payment checkout could not be created."; return; }
+            var payment = await JS.InvokeAsync<RazorpayPaymentResult>("evLaneRazorpay.open", checkout);
+            await ViewModel.VerifyAsync(checkout, payment);
+        }
+        catch (Exception ex) { ViewModel.ErrorMessage = ex.Message; }
+    }
+    private async void Changed(object? s, System.ComponentModel.PropertyChangedEventArgs e) => await InvokeAsync(StateHasChanged);
+    public void Dispose() => ViewModel.PropertyChanged -= Changed;
+}

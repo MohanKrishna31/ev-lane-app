@@ -17,13 +17,13 @@ public class SettingsService : ISettingsService
     public async Task<SettingsDto?> GetAsync()
     {
         return await _apiService.GetAsync<SettingsDto>(
-            "api/app/settings");
+            nApps.Futs.Mobile.Shared.Constants.ApiRoutes.Customer.Settings);
     }
 
     public async Task<SettingsDto?> UpdateAsync(UpdateSettingsRequest request)
     {
         return await _apiService.PutAsync<UpdateSettingsRequest, SettingsDto>(
-            "api/app/settings",
+            nApps.Futs.Mobile.Shared.Constants.ApiRoutes.Customer.Settings,
             request);
     }
 }

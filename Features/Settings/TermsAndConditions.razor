@@ -1,0 +1,15 @@
+@page "/settings/terms-and-conditions"
+
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="Terms & Conditions" Subtitle="Terms and conditions will be published here." />
+    <AppCard>
+        <p>The complete EVLane terms and conditions are being prepared and will be added in a future update.</p>
+    </AppCard>
+    <AppButton Text="Back to Settings" OnClick="GoBack" />
+</PageContainer>
+
+@code {
+    private void GoBack() => Navigation.NavigateTo(AppRoutes.Settings);
+}

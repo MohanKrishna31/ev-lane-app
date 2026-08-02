@@ -1,0 +1,15 @@
+@page "/settings/contact-us"
+
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="Contact Us" Subtitle="EVLane customer support" />
+    <AppCard>
+        <p>Customer-support contact details will be added here in a future update.</p>
+    </AppCard>
+    <AppButton Text="Back to Settings" OnClick="GoBack" />
+</PageContainer>
+
+@code {
+    private void GoBack() => Navigation.NavigateTo(AppRoutes.Settings);
+}

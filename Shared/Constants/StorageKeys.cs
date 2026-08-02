@@ -19,4 +19,6 @@ public static class StorageKeys
     public const string Language = "language";
 
     public const string Theme = "theme";
+
+    public const string BiometricLoginEnabled = "biometric_login_enabled";
 }

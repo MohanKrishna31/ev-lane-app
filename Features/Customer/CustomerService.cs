@@ -19,18 +19,18 @@ public class CustomerService : ICustomerService
 
     public async Task<CustomerDto?> GetProfileAsync()
     {
-        return await _apiService.GetAsync<CustomerDto>("api/app/customer/profile");
+        return await _apiService.GetAsync<CustomerDto>(ApiRoutes.Customer.Profile);
     }
     public async Task<CustomerDto?> UpdateProfileAsync(UpdateCustomerProfileRequest request)
     {
-        return await _apiService.PutAsync<UpdateCustomerProfileRequest,CustomerDto>("api/app/customer/profile",request);
+        return await _apiService.PutAsync<UpdateCustomerProfileRequest,CustomerDto>(ApiRoutes.Customer.Profile,request);
     }
     public async Task<ProfilePhotoDto?> UploadProfilePhotoAsync(Stream stream,string fileName,string contentType)
     {
-        return await _fileUploadService.UploadAsync<ProfilePhotoDto>("api/app/customer/profile-photo",stream,fileName,contentType);
+        return await _fileUploadService.UploadAsync<ProfilePhotoDto>(ApiRoutes.Customer.ProfilePhoto,stream,fileName,contentType);
     }
     public async Task DeleteProfilePhotoAsync()
     {
-        await _apiService.DeleteAsync("api/app/customer/profile-photo");
+        await _apiService.DeleteAsync(ApiRoutes.Customer.ProfilePhoto);
     }
 }

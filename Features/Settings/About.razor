@@ -1,0 +1,16 @@
+@page "/settings/about"
+
+@inject NavigationManager Navigation
+
+<PageContainer>
+    <AppHeader Title="About EVLane" Subtitle="Your EV drive companion" />
+    <AppCard>
+        <p>EVLane helps drivers find charging stations, manage charging sessions, and handle wallet payments.</p>
+        <p>Additional company and application information will be added in a future update.</p>
+    </AppCard>
+    <AppButton Text="Back to Settings" OnClick="GoBack" />
+</PageContainer>
+
+@code {
+    private void GoBack() => Navigation.NavigateTo(AppRoutes.Settings);
+}

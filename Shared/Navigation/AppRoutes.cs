@@ -14,7 +14,13 @@ public static class AppRoutes
 
     public const string Vehicles = "/vehicles";
 
+    public const string VehicleCreate = "/vehicles/new";
+
+    public static string VehicleEdit(Guid id) => $"/vehicles/{id}/edit";
+
     public const string Stations = "/stations";
+
+    public static string StationDetails(Guid id) => $"/stations/{id}";
 
     public const string Charging = "/charging";
 
@@ -26,5 +32,17 @@ public static class AppRoutes
 
     public const string Sessions = "/sessions";
 
+    public static string SessionDetails(Guid id) => $"/sessions/{id}";
+
     public const string Settings = "/settings";
+
+    public const string SettingsLanguage = "/settings/language";
+
+    public const string PrivacyPolicy = "/settings/privacy-policy";
+
+    public const string TermsAndConditions = "/settings/terms-and-conditions";
+
+    public const string ContactUs = "/settings/contact-us";
+
+    public const string About = "/settings/about";
 }

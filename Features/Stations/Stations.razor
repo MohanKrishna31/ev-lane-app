@@ -1,0 +1,101 @@
+@page "/stations"
+@implements IDisposable
+
+@using Microsoft.Extensions.Options
+@using Microsoft.JSInterop
+
+@inject StationsViewModel ViewModel
+@inject IOptions<GoogleMapsSettings> MapsSettings
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageContainer>
+    <AppHeader Title="Charging Stations" Subtitle="Find available EV chargers near you." />
+
+    <AppCard Title="Search">
+        <AppTextBox Label="Station or address" Placeholder="Search charging stations"
+                    @bind-Value="ViewModel.SearchText" />
+        <AppSwitch Label="Available only" Description="Show stations with available connectors."
+                   @bind-Value="ViewModel.AvailableOnly" />
+        <AppButton Text="Search" OnClick="Search" />
+        <AppButton Text="Use My Location" OnClick="UseLocation" />
+    </AppCard>
+
+    @if (ViewModel.CurrentLocation is not null)
+    {
+        <div id="stations-map" class="stations-map"></div>
+    }
+
+    @if (ViewModel.IsBusy)
+    {
+        <p>Finding charging stations...</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+    {
+        <AppCard><p>@ViewModel.ErrorMessage</p></AppCard>
+    }
+    else if (ViewModel.Stations.Count == 0)
+    {
+        <AppCard><p>No charging stations matched your search.</p></AppCard>
+    }
+    else
+    {
+        @foreach (var station in ViewModel.Stations)
+        {
+            <AppCard>
+                <h3>@(station.Name ?? "Charging Station")</h3>
+                <p>@station.Address</p>
+                @if (station.DistanceKm.HasValue)
+                {
+                    <p>@station.DistanceKm.Value.ToString("0.0") km away</p>
+                }
+                <p>@station.AvailableConnectorCount of @station.TotalConnectorCount connectors available</p>
+                @if (station.MaximumPowerKw.HasValue)
+                {
+                    <p>Up to @station.MaximumPowerKw kW</p>
+                }
+                <AppButton Text="View Station" OnClick="@(() => OpenStation(station.Id))" />
+            </AppCard>
+        }
+    }
+</PageContainer>
+
+<style>
+    .stations-map {
+        width: 100%;
+        height: 280px;
+        margin-bottom: 16px;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+</style>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        ViewModel.PropertyChanged += ViewModelChanged;
+        await ViewModel.LoadAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (ViewModel.CurrentLocation is null) return;
+        await JS.InvokeVoidAsync(
+            "evLaneMaps.render",
+            "stations-map",
+            MapsSettings.Value.ApiKey,
+            ViewModel.CurrentLocation.Latitude,
+            ViewModel.CurrentLocation.Longitude,
+            ViewModel.Stations);
+    }
+
+    private Task Search() => ViewModel.LoadAsync(requestLocation: false, includeLocation: false);
+    private Task UseLocation() => ViewModel.LoadAsync(requestLocation: true, includeLocation: true);
+    private void OpenStation(Guid id) => Navigation.NavigateTo(AppRoutes.StationDetails(id));
+
+    private async void ViewModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) =>
+        await InvokeAsync(StateHasChanged);
+
+    public void Dispose() => ViewModel.PropertyChanged -= ViewModelChanged;
+}

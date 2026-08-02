@@ -1,47 +1,20 @@
-﻿@page "/dashboard"
-@layout MainLayout
-
-
+@page "/dashboard"
+@implements IDisposable
+@inject DashboardViewModel ViewModel
+@inject NavigationManager Navigation
 <PageContainer>
-
-
-    <AppHeader Title="Welcome"
-               Subtitle="Find your nearest charging station" />
-
-
-
-    <AppCard>
-
-
-        <h3>
-            Active Charging
-        </h3>
-
-
-        <p>
-            No active charging session
-        </p>
-
-
+    <AppHeader Title="Welcome" Subtitle="Your EV charging overview" />
+    @if (ViewModel.IsBusy) { <p>Loading dashboard...</p> }
+    <AppCard Title="Wallet"><h2>@(ViewModel.Wallet?.Currency ?? "INR") @(ViewModel.Wallet?.Balance.ToString("0.00") ?? "--")</h2><AppButton Text="Open Wallet" OnClick="@(()=>Navigation.NavigateTo(AppRoutes.Wallet))" /></AppCard>
+    <AppCard Title="Active Charging">
+        @if (ViewModel.ActiveSession is null) { <p>No active charging session.</p> }
+        else { <h3>@ViewModel.ActiveSession.StationName</h3><p>@ViewModel.ActiveSession.EnergyKwh.ToString("0.00") kWh · @(ViewModel.ActiveSession.Currency ?? "INR") @ViewModel.ActiveSession.Cost.ToString("0.00")</p><AppButton Text="View Session" OnClick="@(()=>Navigation.NavigateTo(AppRoutes.SessionDetails(ViewModel.ActiveSession.Id)))" /> }
     </AppCard>
-
-
-
-    <AppCard>
-
-
-        <h3>
-            Nearby Stations
-        </h3>
-
-
-        <p>
-            Search nearby EV chargers
-        </p>
-
-
-    </AppCard>
-
-
-
+    <AppCard Title="Charging Stations"><p>@ViewModel.Stations.Count stations available in the current search.</p><AppButton Text="Find Stations" OnClick="@(()=>Navigation.NavigateTo(AppRoutes.Stations))" /></AppCard>
+    <AppCard Title="Notifications"><p>@ViewModel.UnreadNotifications unread</p><AppButton Text="View Notifications" OnClick="@(()=>Navigation.NavigateTo(AppRoutes.Notifications))" /></AppCard>
 </PageContainer>
+@code {
+    protected override async Task OnInitializedAsync(){ViewModel.PropertyChanged+=Changed;await ViewModel.LoadAsync();}
+    private async void Changed(object?s,System.ComponentModel.PropertyChangedEventArgs e)=>await InvokeAsync(StateHasChanged);
+    public void Dispose()=>ViewModel.PropertyChanged-=Changed;
+}
