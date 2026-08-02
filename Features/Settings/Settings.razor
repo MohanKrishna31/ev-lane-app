@@ -1,21 +1,20 @@
 ﻿@page "/settings"
 
-
 @inject SettingsViewModel ViewModel
 @inject NavigationManager Navigation
 
 <PageContainer>
-    <BackButton />
+
+    <AppHeader Title="Settings" ShowBackButton="true" />
 
     <AppCard Title="General">
 
-    <SettingsItem
-        Icon="fa fa-language"
-        Title="Language"
-        Subtitle="@ViewModel.PreferredLanguage"
-        OnClick="OpenLanguage" />
+        <SettingsItem Icon="fa fa-language"
+                      Title="Language"
+                      Subtitle="@ViewModel.PreferredLanguage"
+                      OnClick="OpenLanguage" />
 
-</AppCard>
+    </AppCard>
 
     <AppCard Title="Notifications">
 
@@ -64,7 +63,7 @@
                       OnClick="OpenAbout" />
 
     </AppCard>
-@*     <AppCard Title="Account">
+    @*     <AppCard Title="Account">
 
         <SettingsItem Icon="fa fa-trash"
                       Title="Delete Account"
@@ -72,7 +71,8 @@
                       OnClick="DeleteAccount" />
 
     </AppCard> *@
-        <AppButton Text="Save Settings" OnClick="SaveSettings" />
+
+    <AppButton Text="Save Settings" OnClick="SaveSettings" />
 
 </PageContainer>
 

@@ -1,8 +1,10 @@
 ﻿.app-header {
     background-color: var(--bg-card);
-    padding: 16px;
+    padding: 16px 20px; /* Match the 20px container padding for inner alignment */
     box-shadow: var(--shadow-sm);
-    margin-bottom: 24px;
+    /* Top, Right, Bottom, Left */
+    /* Negative left/right/top pulls the header perfectly flush with the screen edges */
+    margin: -20px -20px 24px -20px;
     position: relative;
     z-index: 10;
 }

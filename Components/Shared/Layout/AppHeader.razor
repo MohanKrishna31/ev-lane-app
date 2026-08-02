@@ -1,11 +1,18 @@
 ﻿<div class="app-header">
     <div class="header-content">
-        <!-- 3-Line Hamburger Menu -->
-        <button class="hamburger-menu-btn" @onclick="HandleMenuClick">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-            </svg>
-        </button>
+        @if (ShowBackButton)
+        {
+            <BackButton />
+        }
+        else
+        {
+            <!-- 3-Line Hamburger Menu -->
+            <button class="hamburger-menu-btn" @onclick="HandleMenuClick">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+        }
 
         <div class="header-titles">
             <h2>@Title</h2>
@@ -23,6 +30,9 @@
 
     [Parameter]
     public string Subtitle { get; set; } = "";
+
+    [Parameter]
+    public bool ShowBackButton { get; set; } = false;
 
     [Parameter]
     public EventCallback OnMenuClicked { get; set; }

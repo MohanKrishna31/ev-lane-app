@@ -1,20 +1,20 @@
 ﻿.bottom-navigation {
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
     width: 100%;
-    max-width: 600px;
+    /* Removed max-width, left: 50%, and transform hacks */
+
     height: 65px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: var(--bg-card); /* Bound properly to theme variable */
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.06); /* WhatsApp style top elevation shadow */
+    background-color: var(--bg-card);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
     border-top: 1px solid var(--border-subtle);
     z-index: 1000;
     padding-bottom: env(safe-area-inset-bottom);
-    transition: background-color 0.3s ease; /* Smooth transition on toggle */
+    transition: background-color 0.3s ease;
 }
 
     .bottom-navigation button {
