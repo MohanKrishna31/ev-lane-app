@@ -28,10 +28,9 @@
 
             <!-- WhatsApp Style Header (Avatar, Name, Edit Button) -->
             <div class="profile-header-section">
-                <!-- Set ShowEditButton to false because we add the stylized text 'Edit' below the name -->
+                <!-- We pass OnAvatarClicked to redirect to the photo change page or you could also implement the popup here directly -->
                 <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhoto"
-                               ShowEditButton="false"
-                               OnChangePhoto="ChangePhoto" />
+                               OnAvatarClicked="ChangePhoto" />
 
                 <h2 class="profile-main-name">
                     @(string.IsNullOrWhiteSpace(ViewModel.Customer?.FullName) ? "Add your name" : ViewModel.Customer?.FullName)
@@ -150,7 +149,7 @@
 
     private void ChangePhoto()
     {
-        Navigation.NavigateTo("/customer/profile/photo");
+        Navigation.NavigateTo("/customer/edit");
     }
 
     private async void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

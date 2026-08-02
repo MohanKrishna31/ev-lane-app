@@ -1,20 +1,79 @@
 ﻿<div class="app-header">
+    <div class="header-content">
+        <!-- 3-Line Hamburger Menu -->
+        <button class="hamburger-menu-btn" @onclick="HandleMenuClick">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
+        </button>
 
-    <h2>@Title</h2>
-
-    @if (!string.IsNullOrWhiteSpace(Subtitle))
-    {
-        <p class="subtitle">@Subtitle</p>
-    }
-
+        <div class="header-titles">
+            <h2>@Title</h2>
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <p class="subtitle">@Subtitle</p>
+            }
+        </div>
+    </div>
 </div>
 
-@code {
+<style>
+    .app-header {
+        padding: 16px;
+        background-color: var(--bg-surface, #ffffff);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .hamburger-menu-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-primary, #333333);
+        padding: 8px;
+        margin: -8px; /* Offset padding to create a larger tap target without breaking layout */
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .hamburger-menu-btn:active {
+            opacity: 0.6;
+        }
+
+    .header-titles h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .header-titles .subtitle {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: var(--text-secondary, #666666);
+    }
+</style>
+
+@code {
     [Parameter]
     public string Title { get; set; } = "";
 
     [Parameter]
     public string Subtitle { get; set; } = "";
 
+    [Parameter]
+    public EventCallback OnMenuClicked { get; set; }
+
+    private async Task HandleMenuClick()
+    {
+        if (OnMenuClicked.HasDelegate)
+        {
+            await OnMenuClicked.InvokeAsync();
+        }
+    }
 }

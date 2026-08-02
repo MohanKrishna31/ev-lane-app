@@ -53,7 +53,7 @@
                 }
             </div>
 
-            <button class="btn-primary w-100" @onclick="SendOtpAsync" disabled="@ViewModel.IsBusy">
+            <button class="btn-primary w-100" @onclick="SendOtpAsync" disabled="@(ViewModel.IsBusy || !ViewModel.IsMobileNumberValid)">
                 <span class="btn-icon">🛡️</span>
                 @(ViewModel.IsBusy ? "REQUESTING..." : "REQUEST TRANSIT OTP")
             </button>
@@ -87,7 +87,7 @@
                 <button class="link-btn" @onclick="ResendOtpAsync" disabled="@ViewModel.IsBusy">Resend OTP</button>
             </div>
 
-            <button class="btn-primary w-100" @onclick="VerifyOtpAsync" disabled="@ViewModel.IsBusy">
+            <button class="btn-primary w-100" @onclick="VerifyOtpAsync" disabled="@(ViewModel.IsBusy || !ViewModel.IsOtpValid)">
                 <span class="btn-icon">🛡️</span>
                 @(ViewModel.IsBusy ? "VERIFYING..." : "AUTHORIZE ESCROW ACCESS")
             </button>

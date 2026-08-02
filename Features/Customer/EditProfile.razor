@@ -14,10 +14,7 @@
     else
     {
         <ProfileAvatar ImageUrl="@ViewModel.Customer?.ProfilePhotoUrl"
-                       ShowEditButton="true"
-                       CanDelete="@(!string.IsNullOrWhiteSpace(ViewModel.Customer?.ProfilePhotoUrl))"
-                       OnChangePhoto="UploadPhoto"
-                       OnDeletePhoto="DeletePhoto" />
+                       OnAvatarClicked="HandleAvatarClick" />
 
         <div class="form-container">
             <AppTextBox Label="Mobile Number"
@@ -40,9 +37,6 @@
                        ValueChanged="@(value => ViewModel.Model.Gender = value)"
                        Items="ViewModel.GenderOptions" />
 
-            @* <AppTextBox Label="Preferred Language"
-                        @bind-Value="ViewModel.Model.PreferredLanguage" /> *@
-
             <div class="mt-4">
                 <AppButton Text="Save"
                            OnClick="SaveAsync" />
@@ -62,11 +56,6 @@
         await ViewModel.LoadAsync();
     }
 
-    private async Task ChangePhoto()
-    {
-        await ViewModel.UploadPhotoAsync();
-    }
-
     private async Task SaveAsync()
     {
         await ViewModel.SaveAsync();
@@ -74,21 +63,31 @@
         Navigation.NavigateTo("/customer/profile");
     }
 
+    private async Task HandleAvatarClick()
+    {
+        var action = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayActionSheet(
+            "Profile picture",
+            "Cancel",
+            "🗑️ Remove photo",
+            "📷 Camera/Gallery");
+
+        if (action == "📷 Camera/Gallery")
+        {
+            await ViewModel.UploadPhotoAsync();
+            await InvokeAsync(StateHasChanged);
+        }
+        else if (action == "🗑️ Remove photo")
+        {
+            await ViewModel.DeletePhotoAsync();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
     private async void ViewModelChanged(
         object? sender,
         System.ComponentModel.PropertyChangedEventArgs e)
     {
         await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task UploadPhoto()
-    {
-        await ViewModel.UploadPhotoAsync();
-    }
-
-    private async Task DeletePhoto()
-    {
-        await ViewModel.DeletePhotoAsync();
     }
 
     public void Dispose()

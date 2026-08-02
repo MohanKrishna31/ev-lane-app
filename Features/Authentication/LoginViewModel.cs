@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using nApps.Futs.Mobile.Shared.Configuration;
 using nApps.Futs.Mobile.Shared.ViewModels;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace nApps.Futs.Mobile.Features.Authentication.ViewModels;
 
@@ -21,17 +23,21 @@ public partial class LoginViewModel : BaseViewModel
 
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMobileNumberValid))]
     public partial string MobileNumber { get; set; } = string.Empty;
 
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOtpValid))]
     public partial string Otp { get; set; } = string.Empty;
 
 
     [ObservableProperty]
     public partial bool OtpSent { get; set; }
 
-
+    // Validation Properties
+    public bool IsMobileNumberValid => !string.IsNullOrWhiteSpace(MobileNumber) && MobileNumber.All(char.IsDigit) && MobileNumber.Length >= 10;
+    public bool IsOtpValid => !string.IsNullOrWhiteSpace(Otp) && Otp.Length == 6 && Otp.All(char.IsDigit);
 
     public async Task SendOtpAsync()
     {
